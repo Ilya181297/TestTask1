@@ -1,7 +1,6 @@
 ﻿@page
 @using TestTask.Models
 @model TestTask.Pages.Divisions.IndexModel
-
 <h1>Guide</h1>
 
 <p>
@@ -15,25 +14,25 @@
 
 @functions {
     List<int> processedIds = new List<int>();
-    public async Task ShowTreeData(ICollection<Division> Division)
+    public async Task ShowTreeData(ICollection<Division> Divisions)
     {
         <ul>
-            @foreach (var i in Division)
+            @foreach (var item in Divisions)
             {
-                if (processedIds.Contains(i.ID))
+                if (processedIds.Contains(item.ID))
                     continue;
 
                 <li type="disc">
-                    @i.Name
-                    <a asp-page="./Edit" asp-route-id="@i.ID">Edit</a>
-                    <a asp-page="./Details" asp-route-id="@i.ID">Details</a>
-                    <a asp-page="./Delete" asp-route-id="@i.ID">Delete</a>
+                    @item.Name
+                    <a asp-page="./Edit" asp-route-id="@item.ID">Edit</a>
+                    <a asp-page="./Details" asp-route-id="@item.ID">Details</a>
+                    <a asp-page="./Delete" asp-route-id="@item.ID">Delete</a>
                     @{
-                        processedIds.Add(i.ID);
+                        processedIds.Add(item.ID);
                     }
-                    @if (i.Children.Any())
+                    @if (item.Children.Any())
                     {
-                        ShowTreeData(i.Children);
+                        ShowTreeData(item.Children);
                     }
                 </li>
             }

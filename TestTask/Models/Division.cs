@@ -4,6 +4,7 @@ namespace TestTask.Models
 {
     public class Division
     {
+
         public Division()
         {
             Children = new HashSet<Division>();
@@ -18,4 +19,5 @@ namespace TestTask.Models
         public virtual Division? Parent { get; set; }
         public virtual ICollection<Division> Children { get; set; }
     }
+
 }

@@ -15,8 +15,12 @@ namespace TestTask.Pages.Divisions
     public class EditModel : PageModel
     {
         private readonly TestTask.Data.TestTaskContext _context;
+        public List<SelectListItem> Divisions { get; set; }
 
-        public EditModel(TestTask.Data.TestTaskContext context)
+        [BindProperty]
+        public int? SelectedDivisionId { get; set; }
+
+        public EditModel(TestTaskContext context)
         {
             _context = context;
         }
@@ -26,19 +30,36 @@ namespace TestTask.Pages.Divisions
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
+            Divisions = _context.Division
+            .Select(x => new SelectListItem
+            {
+                Value = x.ID.ToString(),
+                Text = x.Name
+            })
+            .ToList();
+
             if (id == null)
             {
                 return NotFound();
             }
 
-            Division = await _context.Division.FirstOrDefaultAsync(m => m.ID == id);
+            Division = await _context.Division.Include(x => x.Parent).FirstOrDefaultAsync(m => m.ID == id);
 
             if (Division == null)
             {
                 return NotFound();
             }
+         
+            Divisions.Insert(0, new SelectListItem { Value = "0", Text = "Корневой" });
+               // if (Division.ID.Equals(Divisions))
+                Divisions.Remove(Divisions.SingleOrDefault(r => r.Value == Division.ID.ToString()));
+
+            if (SelectedDivisionId.HasValue && SelectedDivisionId > 0)
+                SelectedDivisionId = Division.ParentId;
+
             return Page();
         }
+
 
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see https://aka.ms/RazorPagesCRUD.
@@ -50,6 +71,9 @@ namespace TestTask.Pages.Divisions
             }
 
             _context.Attach(Division).State = EntityState.Modified;
+
+            if (SelectedDivisionId.HasValue && SelectedDivisionId > 0)
+                Division.ParentId = SelectedDivisionId;
 
             try
             {

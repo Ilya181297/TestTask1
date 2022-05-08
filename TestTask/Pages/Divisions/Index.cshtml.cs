@@ -26,6 +26,5 @@ namespace TestTask.Pages.Divisions
         {
             Division = await _context.Division.ToListAsync();
         }
-
     }
 }

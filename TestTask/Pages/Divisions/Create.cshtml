@@ -1,4 +1,5 @@
 ﻿@page
+@using TestTask.Models
 @model TestTask.Pages.Divisions.CreateModel
 
 @{
@@ -29,9 +30,8 @@
                 <span asp-validation-for="Division.Description" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Division.ParentId" class="control-label"></label>
-                <input asp-for="Division.ParentId" class="form-control" />
-                <span asp-validation-for="Division.ParentId" class="text-danger"></span>
+                <select asp-for="SelectedDivisionId" asp-items="Model.Divisions">
+                </select>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
@@ -45,5 +45,7 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
 }
