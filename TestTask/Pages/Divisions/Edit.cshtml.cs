@@ -1,8 +1,4 @@
 ﻿#nullable disable
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -30,32 +26,30 @@ namespace TestTask.Pages.Divisions
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            Divisions = _context.Division
-            .Select(x => new SelectListItem
-            {
-                Value = x.ID.ToString(),
-                Text = x.Name
-            })
-            .ToList();
-
             if (id == null)
             {
                 return NotFound();
             }
 
-            Division = await _context.Division.Include(x => x.Parent).FirstOrDefaultAsync(m => m.ID == id);
+            Division = await _context.Division.FirstOrDefaultAsync(m => m.ID == id);
 
             if (Division == null)
             {
                 return NotFound();
             }
-         
-            Divisions.Insert(0, new SelectListItem { Value = "0", Text = "Корневой" });
-               // if (Division.ID.Equals(Divisions))
-                Divisions.Remove(Divisions.SingleOrDefault(r => r.Value == Division.ID.ToString()));
 
-            if (SelectedDivisionId.HasValue && SelectedDivisionId > 0)
-                SelectedDivisionId = Division.ParentId;
+            Divisions = _context.Division
+                .Where(x => x.ID != id)
+                .Select(x => new SelectListItem
+                {
+                    Value = x.ID.ToString(),
+                    Text = x.Name
+                })
+            .ToList();
+
+            Divisions.Insert(0, new SelectListItem { Value = "0", Text = "Корневой" });
+
+            SelectedDivisionId = Division.ParentId;
 
             return Page();
         }
@@ -70,10 +64,11 @@ namespace TestTask.Pages.Divisions
                 return Page();
             }
 
+            Division.ParentId = !SelectedDivisionId.HasValue || SelectedDivisionId == 0 ? 
+                null : SelectedDivisionId;
+
             _context.Attach(Division).State = EntityState.Modified;
 
-            if (SelectedDivisionId.HasValue && SelectedDivisionId > 0)
-                Division.ParentId = SelectedDivisionId;
 
             try
             {
