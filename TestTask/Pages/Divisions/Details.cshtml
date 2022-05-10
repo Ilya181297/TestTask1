@@ -1,4 +1,5 @@
 ﻿@page
+@using TestTask.Models
 @model TestTask.Pages.Divisions.DetailsModel
 
 @{
@@ -6,7 +7,6 @@
 }
 
 <h1>Details</h1>
-
 <div>
     <h4>Division</h4>
     <hr />
@@ -28,6 +28,12 @@
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Division.Description)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Division.Parent.Name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Division.Parent.Name)
         </dd>
     </dl>
 </div>

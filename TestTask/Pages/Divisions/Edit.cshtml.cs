@@ -1,8 +1,4 @@
 ﻿#nullable disable
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -15,8 +11,12 @@ namespace TestTask.Pages.Divisions
     public class EditModel : PageModel
     {
         private readonly TestTask.Data.TestTaskContext _context;
+        public List<SelectListItem> Divisions { get; set; }
 
-        public EditModel(TestTask.Data.TestTaskContext context)
+        [BindProperty]
+        public int? SelectedDivisionId { get; set; }
+
+        public EditModel(TestTaskContext context)
         {
             _context = context;
         }
@@ -37,8 +37,23 @@ namespace TestTask.Pages.Divisions
             {
                 return NotFound();
             }
+
+            Divisions = _context.Division
+                .Where(x => x.ID != id)
+                .Select(x => new SelectListItem
+                {
+                    Value = x.ID.ToString(),
+                    Text = x.Name
+                })
+            .ToList();
+
+            Divisions.Insert(0, new SelectListItem { Value = "0", Text = "Корневой" });
+
+            SelectedDivisionId = Division.ParentId;
+
             return Page();
         }
+
 
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see https://aka.ms/RazorPagesCRUD.
@@ -49,7 +64,11 @@ namespace TestTask.Pages.Divisions
                 return Page();
             }
 
+            Division.ParentId = !SelectedDivisionId.HasValue || SelectedDivisionId == 0 ? 
+                null : SelectedDivisionId;
+
             _context.Attach(Division).State = EntityState.Modified;
+
 
             try
             {

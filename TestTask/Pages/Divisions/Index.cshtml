@@ -1,15 +1,45 @@
-﻿@page
+﻿@page 
+@using TestTask.Models
 @model TestTask.Pages.Divisions.IndexModel
-
-@{
-    ViewData["Title"] = "Index";
-}
-
 <h1>Guide</h1>
 
 <p>
     <a asp-page="Create">Create New</a>
 </p>
+
+@{
+    ViewData["Title"] = "Index";
+    ShowTreeData(Model.Division);
+}
+
+@functions {
+    List<int> processedIds = new List<int>();
+    public async Task ShowTreeData(ICollection<Division> Divisions)
+    {
+        <ul>
+            @foreach (var item in Divisions)
+            {
+                if (processedIds.Contains(item.ID))
+                    continue;
+
+                <li type="disc">
+                    @item.Name
+                    <a asp-page="./Edit" asp-route-id="@item.ID">Edit</a>
+                    <a asp-page="./Details" asp-route-id="@item.ID">Details</a>
+                    <a asp-page="./Delete" asp-route-id="@item.ID">Delete</a>
+                    @{
+                        processedIds.Add(item.ID);
+                    }
+                    @if (item.Children.Any())
+                    {
+                        ShowTreeData(item.Children);
+                    }
+                </li>
+            }
+        </ul>
+    }
+}
+
 <table class="tableDivision" border="1" style="text-align: center">
     <thead>
         <tr>
@@ -26,59 +56,26 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.Division) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateOfFormation)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.ID">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.ID">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.ID">Delete</a>
-            </td>
-        </tr>
-}
+
+        @foreach (var item in Model.Division)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateOfFormation)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    <a asp-page="./Edit" asp-route-id="@item.ID">Edit</a> |
+                    <a asp-page="./Details" asp-route-id="@item.ID">Details</a> |
+                    <a asp-page="./Delete" asp-route-id="@item.ID">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
-<table class="tableDivision" border="1">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Division[0].Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Division[0].DateOfFormation)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Division[0].Description)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model.Division) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateOfFormation)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.ID">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.ID">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.ID">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+

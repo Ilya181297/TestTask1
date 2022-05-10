@@ -21,7 +21,6 @@ namespace TestTask.Pages.Divisions
         }
 
         public Division Division { get; set; }
-
         public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null)
@@ -29,7 +28,7 @@ namespace TestTask.Pages.Divisions
                 return NotFound();
             }
 
-            Division = await _context.Division.FirstOrDefaultAsync(m => m.ID == id);
+            Division = await _context.Division.Include(x => x.Parent).FirstOrDefaultAsync(m => m.ID == id);
 
             if (Division == null)
             {
@@ -37,5 +36,6 @@ namespace TestTask.Pages.Divisions
             }
             return Page();
         }
+
     }
 }

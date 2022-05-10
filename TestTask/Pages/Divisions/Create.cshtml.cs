@@ -1,8 +1,4 @@
 ﻿#nullable disable
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -13,16 +9,28 @@ namespace TestTask.Pages.Divisions
 {
     public class CreateModel : PageModel
     {
-        private readonly TestTask.Data.TestTaskContext _context;
+        private readonly TestTaskContext _context;
+        public List<SelectListItem> Divisions { get; set; }
 
-        public CreateModel(TestTask.Data.TestTaskContext context)
+        [BindProperty]
+        public int? SelectedDivisionId { get; set; }
+
+        public CreateModel(TestTaskContext context)
         {
             _context = context;
         }
 
-        public IActionResult OnGet()
+        public void OnGet()
         {
-            return Page();
+            Divisions = _context.Division
+                .Select(x => new SelectListItem
+                {
+                    Value = x.ID.ToString(),
+                    Text = x.Name
+                })
+                .ToList();
+
+            Divisions.Insert(0, new SelectListItem { Value = "0", Text = "Не выбрано"});
         }
 
         [BindProperty]
@@ -35,6 +43,9 @@ namespace TestTask.Pages.Divisions
             {
                 return Page();
             }
+
+            if (SelectedDivisionId.HasValue && SelectedDivisionId > 0)
+                Division.ParentId = SelectedDivisionId;
 
             _context.Division.Add(Division);
             await _context.SaveChangesAsync();
