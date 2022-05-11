@@ -14,7 +14,6 @@ namespace TestTask.Pages.Workers
     public class DetailsModel : PageModel
     {
         private readonly TestTask.Data.TestTaskContext _context;
-
         public DetailsModel(TestTask.Data.TestTaskContext context)
         {
             _context = context;
@@ -36,6 +35,7 @@ namespace TestTask.Pages.Workers
             {
                 return NotFound();
             }
+
             return Page();
         }
     }

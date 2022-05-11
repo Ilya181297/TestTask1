@@ -17,9 +17,13 @@ namespace TestTask.Pages.Workers
         private readonly TestTask.Data.TestTaskContext _context;
 
         public List<SelectListItem> Divisions { get; set; }
+        public List<SelectListItem> Genders { get; set; }
 
         [BindProperty]
         public int? SelectedDivisionId { get; set; }
+
+        [BindProperty]
+        public int SelectedGender { get; set; }
         public EditModel(TestTask.Data.TestTaskContext context)
         {
             _context = context;
@@ -50,7 +54,12 @@ namespace TestTask.Pages.Workers
                 })
             .ToList();
 
+            Genders = new List<SelectListItem>();
+            Genders.Insert(0, new SelectListItem { Value = "0", Text = "Man" });
+            Genders.Insert(1, new SelectListItem { Value = "1", Text = "Woman" });
+
             SelectedDivisionId = Worker.DivisionId;
+            SelectedGender = Worker.Gender;
 
             return Page();
         }
@@ -65,7 +74,7 @@ namespace TestTask.Pages.Workers
             }
 
             Worker.DivisionId = (int)SelectedDivisionId;
-
+            Worker.Gender = SelectedGender;
             _context.Attach(Worker).State = EntityState.Modified;
 
             try

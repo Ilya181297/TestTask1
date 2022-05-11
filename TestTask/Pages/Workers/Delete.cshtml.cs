@@ -14,7 +14,6 @@ namespace TestTask.Pages.Workers
     public class DeleteModel : PageModel
     {
         private readonly TestTask.Data.TestTaskContext _context;
-
         public DeleteModel(TestTask.Data.TestTaskContext context)
         {
             _context = context;
@@ -37,6 +36,7 @@ namespace TestTask.Pages.Workers
             {
                 return NotFound();
             }
+
             return Page();
         }
 

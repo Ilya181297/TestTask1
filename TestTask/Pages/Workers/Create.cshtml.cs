@@ -15,6 +15,7 @@ namespace TestTask.Pages.Workers
     {
         private readonly TestTask.Data.TestTaskContext _context;
         public List<SelectListItem> Divisions { get; set; }
+        public List<SelectListItem> Genders { get; set; }
         public CreateModel(TestTask.Data.TestTaskContext context)
         {
             _context = context;
@@ -22,6 +23,8 @@ namespace TestTask.Pages.Workers
         [BindProperty]
         public int SelectedDivisionId { get; set; }
 
+        [BindProperty]
+        public int SelectedGender { get; set; }
         public void OnGet()
         {
             Divisions = _context.Division
@@ -31,6 +34,9 @@ namespace TestTask.Pages.Workers
                     Text = x.Name
                 })
                 .ToList();
+            Genders = new List<SelectListItem>();
+            Genders.Insert(0, new SelectListItem { Value = "0", Text = "Man" });
+            Genders.Insert(1, new SelectListItem { Value = "1", Text = "Woman" });
         }
 
         [BindProperty]
@@ -45,6 +51,7 @@ namespace TestTask.Pages.Workers
             }
 
             Worker.DivisionId = SelectedDivisionId;
+            Worker.Gender = SelectedGender;
 
             _context.Workers.Add(Worker);
             await _context.SaveChangesAsync();

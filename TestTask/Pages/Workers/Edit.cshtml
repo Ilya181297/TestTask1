@@ -35,9 +35,8 @@
                 <span asp-validation-for="Worker.DateOfBirth" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Worker.Gender" class="control-label"></label>
-                <input asp-for="Worker.Gender" class="form-control" />
-                <span asp-validation-for="Worker.Gender" class="text-danger"></span>
+                <select asp-for="SelectedGender" asp-items="Model.Genders">
+                </select>
             </div>
             <div class="form-group">
                 <label asp-for="Worker.Post" class="control-label"></label>
