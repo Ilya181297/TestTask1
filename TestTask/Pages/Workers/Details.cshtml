@@ -1,0 +1,67 @@
+﻿@page
+@model TestTask.Pages.Workers.DetailsModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Worker</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Worker.Surname)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Worker.Surname)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Worker.Name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Worker.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Worker.MiddleName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Worker.MiddleName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Worker.DateOfBirth)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Worker.DateOfBirth)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Worker.Gender)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Worker.Gender)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Worker.Post)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Worker.Post)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Worker.DrivingLicense)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Worker.DrivingLicense)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Worker.Division)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Worker.Division.Name)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-page="./Workers/Edit" asp-route-id="@Model.Worker.ID">Edit</a> |
+    <a asp-page="../Index">Back to List</a>
+</div>

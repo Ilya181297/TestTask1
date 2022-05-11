@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using TestTask.Data;
 using TestTask.Models;
 
-namespace TestTask.Pages.Divisions
+namespace TestTask.Pages
 {
     public class IndexModel : PageModel
     {
@@ -21,10 +21,14 @@ namespace TestTask.Pages.Divisions
         }
 
         public IList<Division> Division { get;set; }
+        public IList<Worker> Worker { get; set; }
 
         public async Task OnGetAsync()
         {
             Division = await _context.Division.ToListAsync();
+
+            Worker = await _context.Workers
+               .Include(w => w.Division).ToListAsync();
         }
     }
 }

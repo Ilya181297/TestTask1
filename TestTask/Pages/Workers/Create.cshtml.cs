@@ -1,24 +1,26 @@
 ﻿#nullable disable
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using TestTask.Data;
 using TestTask.Models;
 
-namespace TestTask.Pages.Divisions
+namespace TestTask.Pages.Workers
 {
     public class CreateModel : PageModel
     {
-        private readonly TestTaskContext _context;
+        private readonly TestTask.Data.TestTaskContext _context;
         public List<SelectListItem> Divisions { get; set; }
-        public CreateModel(TestTaskContext context)
+        public CreateModel(TestTask.Data.TestTaskContext context)
         {
             _context = context;
         }
-
         [BindProperty]
-        public int? SelectedDivisionId { get; set; }
-
+        public int SelectedDivisionId { get; set; }
 
         public void OnGet()
         {
@@ -29,12 +31,10 @@ namespace TestTask.Pages.Divisions
                     Text = x.Name
                 })
                 .ToList();
-
-            Divisions.Insert(0, new SelectListItem { Value = "0", Text = "Не выбрано"});
         }
 
         [BindProperty]
-        public Division Division { get; set; }
+        public Worker Worker { get; set; }
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
@@ -44,10 +44,9 @@ namespace TestTask.Pages.Divisions
                 return Page();
             }
 
-            if (SelectedDivisionId.HasValue && SelectedDivisionId > 0)
-                Division.ParentId = SelectedDivisionId;
+            Worker.DivisionId = SelectedDivisionId;
 
-            _context.Division.Add(Division);
+            _context.Workers.Add(Worker);
             await _context.SaveChangesAsync();
 
             return RedirectToPage("../Index");
