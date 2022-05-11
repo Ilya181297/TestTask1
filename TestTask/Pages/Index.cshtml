@@ -24,13 +24,13 @@
                     continue;
 
                 <li type="disc">
-                    <a asp-route-id="@item.ID" asp-page-handler="Filter">@item.Name</a>
-                    <a asp-page="./Divisions/Edit" asp-route-id="@item.ID">Edit</a>
-                    <a asp-page="./Divisions/Details" asp-route-id="@item.ID">Details</a>
-                    <a asp-page="./Divisions/Delete" asp-route-id="@item.ID">Delete</a>
+                    <a asp-route-id="@item.ID" asp-page-handler="Filter">@item.Name </a>   |
+                    <a asp-page="./Divisions/Edit" asp-route-id="@item.ID">  Edit  </a>   |
+                    <a asp-page="./Divisions/Details" asp-route-id="@item.ID">  Details  </a>   |
+                    <a asp-page="./Divisions/Delete" asp-route-id="@item.ID">  Delete</a> 
                     @{
                         processedIds.Add(item.ID);
-                    }
+                    }   
                     @if (item.Children.Any())
                     {
                         ShowTreeData(item.Children);
@@ -91,7 +91,7 @@
                     @Html.DisplayFor(modelItem => item.DateOfBirth)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Gender)
+                    @Html.DisplayFor(modelItem => item.GenderStr)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Post)

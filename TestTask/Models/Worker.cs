@@ -16,5 +16,8 @@ namespace TestTask.Models
         public bool DrivingLicense { get; set; }
         public int DivisionId { get; set; }
         public virtual Division? Division { get; set; }
+
+        public string GenderStr => ((Gender)this.Gender).GetString();
+
     }
 }

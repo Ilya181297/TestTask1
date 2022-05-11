@@ -54,9 +54,14 @@ namespace TestTask.Pages.Workers
                 })
             .ToList();
 
-            Genders = new List<SelectListItem>();
-            Genders.Insert(0, new SelectListItem { Value = "0", Text = "Man" });
-            Genders.Insert(1, new SelectListItem { Value = "1", Text = "Woman" });
+            Genders = Enum.GetValues(typeof(Gender))
+                .Cast<Gender>()
+                .Select(v => new SelectListItem
+                {
+                    Value = ((int)v).ToString(),
+                    Text = v.GetString()
+                })
+                .ToList();
 
             SelectedDivisionId = Worker.DivisionId;
             SelectedGender = Worker.Gender;

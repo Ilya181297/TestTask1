@@ -19,11 +19,7 @@ namespace TestTask.Pages
         {
             _context = context;
         }
-        public enum Genders
-        {
-            Man = 0,
-            Woman = 1
-        }
+        
         public IList<Division> Division { get; set; }
         public IList<Worker> Worker { get; set; }
 
