@@ -1,0 +1,114 @@
+﻿@page
+@using TestTask.Models
+@model TestTask.Pages.IndexModel
+<h1>Guide</h1>
+
+<p>
+    <a asp-page="./Divisions/Create">Create New </a></br>
+    <a asp-route-id="0" asp-page-handler="Filter">Cancel Filter</a>
+</p>
+
+@{
+    ViewData["Title"] = "Index";
+    ShowTreeData(Model.Division);
+}
+
+@functions {
+    List<int> processedIds = new List<int>();
+    public async Task ShowTreeData(ICollection<Division> Divisions)
+    {
+        <ul>
+            @foreach (var item in Divisions)
+            {
+                if (processedIds.Contains(item.ID))
+                    continue;
+
+                <li type="disc">
+                    <a asp-route-id="@item.ID" asp-page-handler="Filter">@item.Name </a>   |
+                    <a asp-page="./Divisions/Edit" asp-route-id="@item.ID">  Edit  </a>   |
+                    <a asp-page="./Divisions/Details" asp-route-id="@item.ID">  Details  </a>   |
+                    <a asp-page="./Divisions/Delete" asp-route-id="@item.ID">  Delete</a> 
+                    @{
+                        processedIds.Add(item.ID);
+                    }   
+                    @if (item.Children.Any())
+                    {
+                        ShowTreeData(item.Children);
+                    }
+                </li>
+            }
+        </ul>
+    }
+}
+<p>
+    <a asp-page="./Workers/Create">Create New</a>
+</p>
+<table class="table" name="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Worker[0].Surname)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Worker[0].Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Worker[0].MiddleName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Worker[0].DateOfBirth)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Worker[0].Gender)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Worker[0].Post)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Worker[0].DrivingLicense)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Worker[0].Division)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var item in Model.Worker)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Surname)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MiddleName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateOfBirth)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GenderStr)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Post)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DrivingLicense)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Division.Name)
+                </td>
+                <td>
+                    <a asp-page="./Workers/Edit" asp-route-id="@item.ID">Edit</a> |
+                    <a asp-page="./Workers/Details" asp-route-id="@item.ID">Details</a> |
+                    <a asp-page="./Workers/Delete" asp-route-id="@item.ID">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

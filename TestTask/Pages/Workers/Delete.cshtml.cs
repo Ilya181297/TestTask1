@@ -9,19 +9,18 @@ using Microsoft.EntityFrameworkCore;
 using TestTask.Data;
 using TestTask.Models;
 
-namespace TestTask.Pages.Divisions
+namespace TestTask.Pages.Workers
 {
     public class DeleteModel : PageModel
     {
         private readonly TestTask.Data.TestTaskContext _context;
-
         public DeleteModel(TestTask.Data.TestTaskContext context)
         {
             _context = context;
         }
 
         [BindProperty]
-        public Division Division { get; set; }
+        public Worker Worker { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -30,12 +29,14 @@ namespace TestTask.Pages.Divisions
                 return NotFound();
             }
 
-            Division = await _context.Division.FirstOrDefaultAsync(m => m.ID == id);
+            Worker = await _context.Workers
+                .Include(w => w.Division).FirstOrDefaultAsync(m => m.ID == id);
 
-            if (Division == null)
+            if (Worker == null)
             {
                 return NotFound();
             }
+
             return Page();
         }
 
@@ -46,11 +47,11 @@ namespace TestTask.Pages.Divisions
                 return NotFound();
             }
 
-            Division = await _context.Division.FindAsync(id);
+            Worker = await _context.Workers.FindAsync(id);
 
-            if (Division != null)
+            if (Worker != null)
             {
-                _context.Division.Remove(Division);
+                _context.Workers.Remove(Worker);
                 await _context.SaveChangesAsync();
             }
 

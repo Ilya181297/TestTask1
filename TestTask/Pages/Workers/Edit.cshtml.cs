@@ -1,4 +1,8 @@
 ﻿#nullable disable
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -6,23 +10,27 @@ using Microsoft.EntityFrameworkCore;
 using TestTask.Data;
 using TestTask.Models;
 
-namespace TestTask.Pages.Divisions
+namespace TestTask.Pages.Workers
 {
     public class EditModel : PageModel
     {
         private readonly TestTask.Data.TestTaskContext _context;
+
         public List<SelectListItem> Divisions { get; set; }
+        public List<SelectListItem> Genders { get; set; }
 
         [BindProperty]
         public int? SelectedDivisionId { get; set; }
 
-        public EditModel(TestTaskContext context)
+        [BindProperty]
+        public int SelectedGender { get; set; }
+        public EditModel(TestTask.Data.TestTaskContext context)
         {
             _context = context;
         }
 
         [BindProperty]
-        public Division Division { get; set; }
+        public Worker Worker { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -31,15 +39,14 @@ namespace TestTask.Pages.Divisions
                 return NotFound();
             }
 
-            Division = await _context.Division.FirstOrDefaultAsync(m => m.ID == id);
+            Worker = await _context.Workers
+                .Include(w => w.Division).FirstOrDefaultAsync(m => m.ID == id);
 
-            if (Division == null)
+            if (Worker == null)
             {
                 return NotFound();
             }
-
             Divisions = _context.Division
-                .Where(x => x.ID != id)
                 .Select(x => new SelectListItem
                 {
                     Value = x.ID.ToString(),
@@ -47,13 +54,20 @@ namespace TestTask.Pages.Divisions
                 })
             .ToList();
 
-            Divisions.Insert(0, new SelectListItem { Value = "0", Text = "Корневой" });
+            Genders = Enum.GetValues(typeof(Gender))
+                .Cast<Gender>()
+                .Select(v => new SelectListItem
+                {
+                    Value = ((int)v).ToString(),
+                    Text = v.GetString()
+                })
+                .ToList();
 
-            SelectedDivisionId = Division.ParentId;
+            SelectedDivisionId = Worker.DivisionId;
+            SelectedGender = Worker.Gender;
 
             return Page();
         }
-
 
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see https://aka.ms/RazorPagesCRUD.
@@ -64,11 +78,9 @@ namespace TestTask.Pages.Divisions
                 return Page();
             }
 
-            Division.ParentId = !SelectedDivisionId.HasValue || SelectedDivisionId == 0 ? 
-                null : SelectedDivisionId;
-
-            _context.Attach(Division).State = EntityState.Modified;
-
+            Worker.DivisionId = (int)SelectedDivisionId;
+            Worker.Gender = SelectedGender;
+            _context.Attach(Worker).State = EntityState.Modified;
 
             try
             {
@@ -76,7 +88,7 @@ namespace TestTask.Pages.Divisions
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!DivisionExists(Division.ID))
+                if (!WorkerExists(Worker.ID))
                 {
                     return NotFound();
                 }
@@ -89,9 +101,9 @@ namespace TestTask.Pages.Divisions
             return RedirectToPage("../Index");
         }
 
-        private bool DivisionExists(int id)
+        private bool WorkerExists(int id)
         {
-            return _context.Division.Any(e => e.ID == id);
+            return _context.Workers.Any(e => e.ID == id);
         }
     }
 }
