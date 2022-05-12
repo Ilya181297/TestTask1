@@ -19,10 +19,10 @@ namespace TestTask.Pages
         {
             _context = context;
         }
-        
         public IList<Division> Division { get; set; }
         public IList<Worker> Worker { get; set; }
 
+        public Division? SelectedDivision { get; set; }
         public async Task OnGetAsync()
         {
             Division = await _context.Division.ToListAsync();
@@ -31,17 +31,38 @@ namespace TestTask.Pages
                .Include(w => w.Division).ToListAsync();
         }
 
-        public async Task OnGetFilter(int? id)
+        public async Task<IActionResult> OnGetFilter(int? id)
         {
             Division = await _context.Division.ToListAsync();
 
-            Worker = id == 0
-                ? _context.Workers
-                    .Include(w => w.Division).ToList()
-                : _context.Workers
-                    .Where(x => x.DivisionId == id)
-                    .Include(w => w.Division).ToList();
+            var rootDivision = _context.Division.Find(id);
+            SelectedDivision = rootDivision;
+            if (rootDivision is null)
+            {
+                Worker = _context.Workers
+                    .Include(w => w.Division)
+                    .ToList();
+                return Page();
+            }
+
+            FillRecursive(rootDivision);
+
+            Worker = _context.Workers
+                .Where(x => divisionIds.Contains(x.DivisionId) || x.DivisionId == id)
+                .Include(x => x.Division)
+                .ToList();
+
+            return Page(); 
         }
 
+        private List<int> divisionIds = new List<int>();
+        private void FillRecursive(Division division)
+        {
+            foreach (var child in division.Children)
+            {
+                divisionIds.Add(child.ID);
+                FillRecursive(child);
+            }
+        }
     }
 }
