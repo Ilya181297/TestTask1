@@ -5,57 +5,57 @@
     ViewData["Title"] = "Delete";
 }
 
-<h1>Delete</h1>
+<h1>Удаление</h1>
 
-<h3>Are you sure you want to delete this?</h3>
+<h3>Вы уверены, что хотите удалить это?</h3>
 <div>
-    <h4>Worker</h4>
+    <h4>Работника</h4>
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Worker.Surname)
+            Фамилия
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Worker.Surname)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Worker.Name)
+            Имя
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Worker.Name)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Worker.MiddleName)
+            Отчество
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Worker.MiddleName)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Worker.DateOfBirth)
+            Дата рождения
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Worker.DateOfBirth)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Worker.Gender)
+            Пол
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Worker.GenderStr)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Worker.Post)
+            Должность
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Worker.Post)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Worker.DrivingLicense)
+            Водительские права
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Worker.DrivingLicense)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Worker.Division)
+            Подразделение
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Worker.Division.Name)
@@ -64,7 +64,7 @@
     
     <form method="post">
         <input type="hidden" asp-for="Worker.ID" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-page="../Index">Back to List</a>
+        <input type="submit" value="Удалить" class="btn btn-danger" /> |
+        <a asp-page="../Index">Назад</a>
     </form>
 </div>

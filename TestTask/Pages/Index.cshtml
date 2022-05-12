@@ -1,11 +1,10 @@
 ﻿@page
 @using TestTask.Models
 @model TestTask.Pages.IndexModel
-<h1>Guide</h1>
+<h1>Справочник</h1>
 
 <p>
-    <a asp-page="./Divisions/Create">Create New </a></br>
-    <a asp-route-id="0" asp-page-handler="Filter">Cancel Filter</a>
+    <a asp-page="./Divisions/Create">Добавить подразделение </a></br>
 </p>
 
 @{
@@ -24,13 +23,13 @@
                     continue;
 
                 <li type="disc">
-                    <a asp-route-id="@item.ID" asp-page-handler="Filter">@item.Name </a>   |
-                    <a asp-page="./Divisions/Edit" asp-route-id="@item.ID">  Edit  </a>   |
-                    <a asp-page="./Divisions/Details" asp-route-id="@item.ID">  Details  </a>   |
-                    <a asp-page="./Divisions/Delete" asp-route-id="@item.ID">  Delete</a> 
+                    <a asp-route-id="@item.ID" asp-page-handler="Filter">@item.Name</a> &ensp; | &ensp; 
+                    <a asp-page="./Divisions/Edit" asp-route-id="@item.ID">Редактировать</a> &ensp; | &ensp;
+                    <a asp-page="./Divisions/Details" asp-route-id="@item.ID">Детали</a> &ensp; | &ensp; 
+                    <a asp-page="./Divisions/Delete" asp-route-id="@item.ID">Удалить</a>
                     @{
                         processedIds.Add(item.ID);
-                    }   
+                    }
                     @if (item.Children.Any())
                     {
                         ShowTreeData(item.Children);
@@ -40,35 +39,44 @@
         </ul>
     }
 }
-<p>
-    <a asp-page="./Workers/Create">Create New</a>
-</p>
+      @if (Model.SelectedDivision != null)
+{
+<div>
+    Выбранное подразделение: @Html.DisplayFor(model => Model.SelectedDivision.Name)
+    <a asp-route-id="0" asp-page-handler="Filter">Cancel Filter</a>
+</div>
+}
+
+
 <table class="table" name="table">
+    <tr>
+        <a asp-page="./Workers/Create">Добавить работника</a>
+    </tr>
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Worker[0].Surname)
+            Фамилия
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Worker[0].Name)
+            Имя
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Worker[0].MiddleName)
+            Отчество
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Worker[0].DateOfBirth)
+            Дата рождения
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Worker[0].Gender)
+            Пол
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Worker[0].Post)
+            Должность
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Worker[0].DrivingLicense)
+            Водительские права
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Worker[0].Division)
+            Подразделение
             </th>
             <th></th>
         </tr>
@@ -103,9 +111,9 @@
                     @Html.DisplayFor(modelItem => item.Division.Name)
                 </td>
                 <td>
-                    <a asp-page="./Workers/Edit" asp-route-id="@item.ID">Edit</a> |
-                    <a asp-page="./Workers/Details" asp-route-id="@item.ID">Details</a> |
-                    <a asp-page="./Workers/Delete" asp-route-id="@item.ID">Delete</a>
+                    <a asp-page="./Workers/Edit" asp-route-id="@item.ID">Редактировать</a> |
+                    <a asp-page="./Workers/Details" asp-route-id="@item.ID">Детали</a> |
+                    <a asp-page="./Workers/Delete" asp-route-id="@item.ID">Удалить</a>
                 </td>
             </tr>
         }

@@ -5,9 +5,9 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
+<h1>Редактироние</h1>
 
-<h4>Worker</h4>
+<h4>Работника</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -15,22 +15,22 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Worker.ID" />
             <div class="form-group">
-                <label asp-for="Worker.Surname" class="control-label"></label>
+                <label asp-for="Worker.Surname" class="control-label">Фамилия</label>
                 <input asp-for="Worker.Surname" class="form-control" />
                 <span asp-validation-for="Worker.Surname" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Worker.Name" class="control-label"></label>
+                <label asp-for="Worker.Name" class="control-label">Имя</label>
                 <input asp-for="Worker.Name" class="form-control" />
                 <span asp-validation-for="Worker.Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Worker.MiddleName" class="control-label"></label>
+                <label asp-for="Worker.MiddleName" class="control-label">Отчество</label>
                 <input asp-for="Worker.MiddleName" class="form-control" />
                 <span asp-validation-for="Worker.MiddleName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Worker.DateOfBirth" class="control-label"></label>
+                <label asp-for="Worker.DateOfBirth" class="control-label">Дата рождения</label>
                 <input asp-for="Worker.DateOfBirth" class="form-control" />
                 <span asp-validation-for="Worker.DateOfBirth" class="text-danger"></span>
             </div>
@@ -39,13 +39,13 @@
                 </select>
             </div>
             <div class="form-group">
-                <label asp-for="Worker.Post" class="control-label"></label>
+                <label asp-for="Worker.Post" class="control-label">Должность</label>
                 <input asp-for="Worker.Post" class="form-control" />
                 <span asp-validation-for="Worker.Post" class="text-danger"></span>
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Worker.DrivingLicense" /> @Html.DisplayNameFor(model => model.Worker.DrivingLicense)
+                    <input class="form-check-input" asp-for="Worker.DrivingLicense" /> Водительские права
                 </label>
             </div>
             <div class="form-group">
@@ -53,14 +53,14 @@
                 </select>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="Сохранить" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-page="../Index">Back to List</a>
+    <a asp-page="../Index">Назад</a>
 </div>
 
 @section Scripts {
