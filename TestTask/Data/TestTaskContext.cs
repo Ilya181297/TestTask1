@@ -9,7 +9,7 @@ namespace TestTask.Data
         public TestTaskContext(DbContextOptions<TestTaskContext> options)
             : base(options)
         {
-            Database.EnsureCreated();
+           // Database.EnsureCreated();
         }
 
         public DbSet<Division> Division { get; set; }
