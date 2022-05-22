@@ -4,20 +4,19 @@ namespace TestTask.Models
 {
     public class Worker
     {
-        public int ID { get; set; }
+        public int Id { get; set; }
         public string Surname { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;
-        public string MiddleName { get; set; } = string.Empty;
+        public string? MiddleName { get; set; }
 
         [DataType(DataType.Date)]
-        public DateTime DateOfBirth { get; set; }
-        public int Gender { get; set; }
+        public DateTime BirthDate { get; set; }
+        public int GenderId { get; set; }
         public string Post { get; set; } = string.Empty;
-        public bool DrivingLicense { get; set; }
+        public bool IsHasDriveLicense { get; set; }
         public int DivisionId { get; set; }
         public virtual Division? Division { get; set; }
 
-        public string GenderStr => ((Gender)this.Gender).GetString();
-
+        public string Gender => ((Gender)this.GenderId).GetDescription();
     }
 }

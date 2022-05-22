@@ -1,11 +1,6 @@
 ﻿#nullable disable
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TestTask.Data;
 using TestTask.Models;
@@ -19,48 +14,49 @@ namespace TestTask.Pages
         {
             _context = context;
         }
-        public IList<Division> Division { get; set; }
-        public IList<Worker> Worker { get; set; }
 
-        public Division? SelectedDivision { get; set; }
+        public List<Division> Divisions { get; set; }
+        public List<Worker> Workers { get; set; }
+        public Division SelectedDivision { get; set; }
+
         public async Task OnGetAsync()
         {
-            Division = await _context.Division.ToListAsync();
-
-            Worker = await _context.Workers
-               .Include(w => w.Division).ToListAsync();
+            Divisions = _context.Division
+                .ToList().FindAll(x => !x.ParentId.HasValue);
+            //Divisions = _context.Division.Include(x => x.Children).Where(x => !x.ParentId.HasValue).ToList();
+            Workers = await _context.Worker.Include(w => w.Division).ToListAsync();
         }
 
-        public async Task<IActionResult> OnGetFilter(int? id)
+        public async Task<IActionResult> OnGetFilter(int id)
         {
-            Division = await _context.Division.ToListAsync();
+            Divisions = _context.Division
+                 .ToList().FindAll(x => !x.ParentId.HasValue);
 
-            var rootDivision = _context.Division.Find(id);
-            SelectedDivision = rootDivision;
-            if (rootDivision is null)
+            SelectedDivision = _context.Division.Find(id);
+
+            if (SelectedDivision is null)
             {
-                Worker = _context.Workers
-                    .Include(w => w.Division)
-                    .ToList();
+                Workers = _context.Worker.Include(w => w.Division).ToList();
+
                 return Page();
             }
 
-            FillRecursive(rootDivision);
+            FillRecursive(SelectedDivision);
 
-            Worker = _context.Workers
-                .Where(x => divisionIds.Contains(x.DivisionId) || x.DivisionId == id)
+            Workers = _context.Worker
+                .Where(x => _childIds.Contains(x.DivisionId) || x.DivisionId == id)
                 .Include(x => x.Division)
                 .ToList();
 
-            return Page(); 
+            return Page();
         }
 
-        private List<int> divisionIds = new List<int>();
+        private readonly List<int> _childIds = new();
         private void FillRecursive(Division division)
         {
             foreach (var child in division.Children)
             {
-                divisionIds.Add(child.ID);
+                _childIds.Add(child.Id);
                 FillRecursive(child);
             }
         }

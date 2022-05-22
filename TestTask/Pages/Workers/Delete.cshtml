@@ -34,13 +34,13 @@
             Дата рождения
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Worker.DateOfBirth)
+            @Html.DisplayFor(model => model.Worker.BirthDate)
         </dd>
         <dt class="col-sm-2">
             Пол
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Worker.GenderStr)
+            @Html.DisplayFor(model => model.Worker.Gender)
         </dd>
         <dt class="col-sm-2">
             Должность
@@ -52,7 +52,7 @@
             Водительские права
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Worker.DrivingLicense)
+            @Html.DisplayFor(model => model.Worker.IsHasDriveLicense)
         </dd>
         <dt class="col-sm-2">
             Подразделение
@@ -63,7 +63,7 @@
     </dl>
     
     <form method="post">
-        <input type="hidden" asp-for="Worker.ID" />
+        <input type="hidden" asp-for="Worker.Id" />
         <input type="submit" value="Удалить" class="btn btn-danger" /> |
         <a asp-page="../Index">Назад</a>
     </form>

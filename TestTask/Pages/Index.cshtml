@@ -1,122 +1,144 @@
 ﻿@page
 @using TestTask.Models
 @model TestTask.Pages.IndexModel
-<h1>Справочник</h1>
 
-<p>
-    <a asp-page="./Divisions/Create">Добавить подразделение </a></br>
-</p>
+<div style="display: inline-block; width: 100%">
+    <h1>Справочник</h1>
+    <div style="float: left; margin-left: -10%; width: 22%; border-right: 1px solid;">
 
-@{
-    ViewData["Title"] = "Index";
-    ShowTreeData(Model.Division);
-}
+        <p>
+            <a asp-route-id="0" asp-page="./Divisions/Edit">Добавить подразделение </a></br>
+        </p>
 
-@functions {
-    List<int> processedIds = new List<int>();
-    public async Task ShowTreeData(ICollection<Division> Divisions)
-    {
-        <ul>
-            @foreach (var item in Divisions)
-            {
-                if (processedIds.Contains(item.ID))
-                    continue;
-
-                <li type="disc">
-                    <a asp-route-id="@item.ID" asp-page-handler="Filter">@item.Name</a> &ensp; | &ensp; 
-                    <a asp-page="./Divisions/Edit" asp-route-id="@item.ID">Редактировать</a> &ensp; | &ensp;
-                    <a asp-page="./Divisions/Details" asp-route-id="@item.ID">Детали</a> &ensp; | &ensp; 
-                    <a asp-page="./Divisions/Delete" asp-route-id="@item.ID">Удалить</a>
-                    @{
-                        processedIds.Add(item.ID);
-                    }
-                    @if (item.Children.Any())
-                    {
-                        ShowTreeData(item.Children);
-                    }
-                </li>
-            }
-        </ul>
-    }
-}
-      @if (Model.SelectedDivision != null)
-{
-<div>
-    Выбранное подразделение: @Html.DisplayFor(model => Model.SelectedDivision.Name)
-    <a asp-route-id="0" asp-page-handler="Filter">Cancel Filter</a>
-</div>
-}
-
-
-<table class="table" name="table">
-    <tr>
-        <a asp-page="./Workers/Create">Добавить работника</a>
-    </tr>
-    <thead>
-        <tr>
-            <th>
-            Фамилия
-            </th>
-            <th>
-            Имя
-            </th>
-            <th>
-            Отчество
-            </th>
-            <th>
-            Дата рождения
-            </th>
-            <th>
-            Пол
-            </th>
-            <th>
-            Должность
-            </th>
-            <th>
-            Водительские права
-            </th>
-            <th>
-            Подразделение
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-
-        @foreach (var item in Model.Worker)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Surname)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.MiddleName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.DateOfBirth)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.GenderStr)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Post)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.DrivingLicense)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Division.Name)
-                </td>
-                <td>
-                    <a asp-page="./Workers/Edit" asp-route-id="@item.ID">Редактировать</a> |
-                    <a asp-page="./Workers/Details" asp-route-id="@item.ID">Детали</a> |
-                    <a asp-page="./Workers/Delete" asp-route-id="@item.ID">Удалить</a>
-                </td>
-            </tr>
+        @{
+            ViewData["Title"] = "Index";
+            await ShowTreeData(Model.Divisions);
         }
-    </tbody>
-</table>
+
+        @functions {
+            public async Task ShowTreeData(List<Division> Divisions)
+            {
+                <ul>
+                    @foreach (var item in Divisions)
+                    {
+                        <li type="disc">
+                            <a asp-route-id="@item.Id" asp-page-handler="Filter">@item.Name</a>
+                            <a asp-page="./Divisions/Edit" asp-route-id="@item.Id">
+                                <img src="images/edit.png" width="15"
+                             height="15" alt="Редактировать">
+                            </a>
+                            <a asp-page="./Divisions/Details" asp-route-id="@item.Id">
+                                <img src="images/details.png" width="15"
+                             height="15" alt="Просмотр">
+                            </a>
+                            <a asp-page="./Divisions/Delete" asp-route-id="@item.Id">
+                                <img src="images/delete.png" width="15"
+                             height="15" alt="Удалить">
+                            </a>
+                            @if (item.Children.Count > 0)
+                            {
+                                await ShowTreeData(item.Children.ToList());
+                            }
+                        </li>
+                    }
+                </ul>
+            }
+        }
+    </div>
+    <div style="float: right; margin-right: 0; padding: 0; width: 78%">
+
+        @if (Model.SelectedDivision != null)
+        {
+            <div>
+                Выбранное подразделение: @Html.DisplayFor(model => Model.SelectedDivision.Name)
+                <a asp-route-id="0" asp-page-handler="Filter">Отменить фильтр</a>
+            </div>
+        }
+
+        <table class="table" style="margin-left: -10%; padding-right: 0;" name="table">
+            <tr text-align="right">
+                <a asp-route-id="0" asp-page="./Workers/Edit">Добавить работника</a>
+            </tr>
+            <thead>
+                <tr>
+                    <th>
+                        Фамилия
+                    </th>
+                    <th>
+                        Имя
+                    </th>
+                    <th>
+                        Отчество
+                    </th>
+                    <th>
+                        Дата рождения
+                    </th>
+                    <th>
+                        Пол
+                    </th>
+                    <th>
+                        Должность
+                    </th>
+                    <th>
+                        Водительские права
+                    </th>
+                    <th>
+                        Подразделение
+                    </th>
+                    <th>
+                        Действия
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (var item in Model.Workers)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Surname)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.MiddleName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.BirthDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Gender)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Post)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.IsHasDriveLicense)
+                        </td>
+                        <td>
+                            @if (item.Division is not null)
+                                @Html.DisplayFor(modelItem => item.Division.Name)
+
+                            </td>
+                            <td>
+                                <a asp-page="./Workers/Edit" asp-route-id="@item.Id">
+                                    <img src="images/edit.png" width="20"
+                                 height="20" alt="Редактировать">
+                                </a>
+                                <a asp-page="./Workers/Details" asp-route-id="@item.Id">
+                                    <img src="images/details.png" width="20"
+                                 height="20" alt="Просмотр">
+                                </a>
+                                <a asp-page="./Workers/Delete" asp-route-id="@item.Id">
+                                    <img src="images/delete.png" width="20"
+                                 height="20" alt="Удалить">
+                                </a>
+                            </td>
+                        </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
 

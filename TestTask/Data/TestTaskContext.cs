@@ -7,13 +7,13 @@ namespace TestTask.Data
     public class TestTaskContext : DbContext
     {
         public TestTaskContext(DbContextOptions<TestTaskContext> options)
-            : base(options)
+           : base(options)
         {
            // Database.EnsureCreated();
         }
 
         public DbSet<Division> Division { get; set; }
-        public DbSet<Worker> Workers { get; set; }
+        public DbSet<Worker> Worker { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

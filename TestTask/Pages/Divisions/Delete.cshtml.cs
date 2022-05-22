@@ -1,8 +1,4 @@
 ﻿#nullable disable
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -13,46 +9,35 @@ namespace TestTask.Pages.Divisions
 {
     public class DeleteModel : PageModel
     {
-        private readonly TestTask.Data.TestTaskContext _context;
-
-        public DeleteModel(TestTask.Data.TestTaskContext context)
-        {
-            _context = context;
-        }
+        private readonly TestTaskContext _context;
 
         [BindProperty]
         public Division Division { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public DeleteModel(TestTaskContext context)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            _context = context;
+        }
 
-            Division = await _context.Division.FirstOrDefaultAsync(m => m.ID == id);
+        public async Task<IActionResult> OnGetAsync(int id)
+        {
+            Division = await _context.Division.FindAsync(id);
 
-            if (Division == null)
-            {
-                return NotFound();
-            }
+            if (Division is null)
+                return NotFound($"Division with Id={id} is not found");
+
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync(int? id)
+        public async Task<IActionResult> OnPostAsync(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
             Division = await _context.Division.FindAsync(id);
 
-            if (Division != null)
-            {
-                _context.Division.Remove(Division);
-                await _context.SaveChangesAsync();
-            }
+            if (Division is null)
+                return NotFound($"Division with Id={id} is not found");
+
+            _context.Division.Remove(Division);
+            await _context.SaveChangesAsync();
 
             return RedirectToPage("../Index");
         }

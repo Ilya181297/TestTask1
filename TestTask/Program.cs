@@ -8,11 +8,6 @@ builder.Services.AddRazorPages();
 builder.Services.AddDbContext<TestTaskContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("TestTaskContext") ?? throw new InvalidOperationException("Connection string 'TestTaskContext' not found.")));
 
-//builder.Services.AddMvc().AddRazorPagesOptions(options =>
-//{
-//    options.Conventions.AddPageRoute("/Divisions/Index", "");
-//});
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
