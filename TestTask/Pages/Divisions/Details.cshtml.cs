@@ -1,8 +1,4 @@
 ﻿#nullable disable
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -13,29 +9,22 @@ namespace TestTask.Pages.Divisions
 {
     public class DetailsModel : PageModel
     {
-        private readonly TestTask.Data.TestTaskContext _context;
+        private readonly TestTaskContext _context;
+        public Division Division { get; set; }
 
-        public DetailsModel(TestTask.Data.TestTaskContext context)
+        public DetailsModel(TestTaskContext context)
         {
             _context = context;
         }
 
-        public Division Division { get; set; }
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public async Task<IActionResult> OnGetAsync(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            Division = await _context.Division.Include(x => x.Parent).FirstOrDefaultAsync(m => m.Id == id);
 
-            Division = await _context.Division.Include(x => x.Parent).FirstOrDefaultAsync(m => m.ID == id);
+            if (Division is null)
+                return NotFound($"Division with Id={id} is not found");
 
-            if (Division == null)
-            {
-                return NotFound();
-            }
             return Page();
         }
-
     }
 }

@@ -10,88 +10,71 @@ namespace TestTask.Pages.Divisions
 {
     public class EditModel : PageModel
     {
-        private readonly TestTask.Data.TestTaskContext _context;
+        private readonly TestTaskContext _context;
         public List<SelectListItem> Divisions { get; set; }
 
         [BindProperty]
-        public int? SelectedDivisionId { get; set; }
+        public Division Division { get; set; }
+
+        [BindProperty]
+        public int SelectedParentId { get; set; }
 
         public EditModel(TestTaskContext context)
         {
             _context = context;
         }
-
-        [BindProperty]
-        public Division Division { get; set; }
-
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public IActionResult OnGet(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            Division = await _context.Division.FirstOrDefaultAsync(m => m.ID == id);
-
-            if (Division == null)
-            {
-                return NotFound();
-            }
-
             Divisions = _context.Division
-                .Where(x => x.ID != id)
-                .Select(x => new SelectListItem
-                {
-                    Value = x.ID.ToString(),
-                    Text = x.Name
-                })
-            .ToList();
+                     .Where(x => x.Id != id)
+                     .Select(x => new SelectListItem
+                     {
+                         Value = x.Id.ToString(),
+                         Text = x.Name
+                     })
+                     .ToList();
 
             Divisions.Insert(0, new SelectListItem { Value = "0", Text = "Корневой" });
 
-            SelectedDivisionId = Division.ParentId;
+            if (id == 0)
+            {
+                Division = new Division();
+                Division.FormationDate = DateTime.Today;
+
+                return Page();
+            }
+
+            Division = _context.Division.FirstOrDefault(m => m.Id == id);
+            if (Division is null)
+                return NotFound();
+
+            SelectedParentId = Division.ParentId ?? 0;
 
             return Page();
         }
 
-
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see https://aka.ms/RazorPagesCRUD.
         public async Task<IActionResult> OnPostAsync()
         {
             if (!ModelState.IsValid)
-            {
                 return Page();
-            }
 
-            Division.ParentId = !SelectedDivisionId.HasValue || SelectedDivisionId == 0 ? 
-                null : SelectedDivisionId;
-
-            _context.Attach(Division).State = EntityState.Modified;
-
-
-            try
+            if (Division.Id == 0)
             {
-                await _context.SaveChangesAsync();
+                if (SelectedParentId > 0)
+                    Division.ParentId = SelectedParentId;
+
+                _context.Division.Add(Division);
             }
-            catch (DbUpdateConcurrencyException)
+            else
             {
-                if (!DivisionExists(Division.ID))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
+                Division.ParentId = SelectedParentId == 0 ? null : SelectedParentId;
+                _context.Attach(Division).State = EntityState.Modified;
             }
+
+            await _context.SaveChangesAsync();
 
             return RedirectToPage("../Index");
         }
-
-        private bool DivisionExists(int id)
-        {
-            return _context.Division.Any(e => e.ID == id);
-        }
     }
 }
+

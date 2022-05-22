@@ -1,8 +1,4 @@
 ﻿#nullable disable
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
@@ -13,8 +9,9 @@ namespace TestTask.Pages.Workers
 {
     public class DeleteModel : PageModel
     {
-        private readonly TestTask.Data.TestTaskContext _context;
-        public DeleteModel(TestTask.Data.TestTaskContext context)
+        private readonly TestTaskContext _context;
+
+        public DeleteModel(TestTaskContext context)
         {
             _context = context;
         }
@@ -22,36 +19,24 @@ namespace TestTask.Pages.Workers
         [BindProperty]
         public Worker Worker { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public async Task<IActionResult> OnGetAsync(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            Worker = await _context.Worker
+                .Include(w => w.Division).FirstOrDefaultAsync(m => m.Id == id);
 
-            Worker = await _context.Workers
-                .Include(w => w.Division).FirstOrDefaultAsync(m => m.ID == id);
-
-            if (Worker == null)
-            {
-                return NotFound();
-            }
+            if (Worker is null)
+                return NotFound($"Division with Id={id} is not found");
 
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync(int? id)
+        public async Task<IActionResult> OnPostAsync(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            Worker = await _context.Worker.FindAsync(id);
 
-            Worker = await _context.Workers.FindAsync(id);
-
-            if (Worker != null)
+            if (Worker is not null)
             {
-                _context.Workers.Remove(Worker);
+                _context.Worker.Remove(Worker);
                 await _context.SaveChangesAsync();
             }
 

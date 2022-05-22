@@ -6,24 +6,30 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Редактировать</h1>
-
+@if (Model.Division.Id == 0)
+{
+    <h1>Добавить</h1>
+}
+else
+{
+    <h1>Редактировать</h1>
+}
 <h4>Подразделение</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Division.ID" />
+            <input type="hidden" asp-for="Division.Id" />
             <div class="form-group">
                 <label asp-for="Division.Name" class="control-label">Название</label>
                 <input asp-for="Division.Name" class="form-control" />
                 <span asp-validation-for="Division.Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Division.DateOfFormation" class="control-label">Дата формирования</label>
-                <input asp-for="Division.DateOfFormation" class="form-control" />
-                <span asp-validation-for="Division.DateOfFormation" class="text-danger"></span>
+                <label asp-for="Division.FormationDate" class="control-label">Дата формирования</label>
+                <input asp-for="Division.FormationDate" class="form-control" />
+                <span asp-validation-for="Division.FormationDate" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Division.Description" class="control-label">Описание</label>
@@ -31,11 +37,19 @@
                 <span asp-validation-for="Division.Description" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <select asp-for="SelectedDivisionId" asp-items="Model.Divisions">
+                <label asp-for="Division.Children" class="control-label">Родительское подразделение</label>
+                <select asp-for="SelectedParentId" asp-items="Model.Divisions">
                 </select>
             </div>
             <div class="form-group">
-                <input type="submit" value="Сохранить" class="btn btn-primary" />
+                @if (Model.Division.Id == 0)
+                {
+                    <input type="submit" value="Добавить" class="btn btn-primary" />
+                }
+                else
+                {
+                    <input type="submit" value="Сохранить" class="btn btn-primary" />
+                }
             </div>
         </form>
     </div>
@@ -46,5 +60,9 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+
+}
 }

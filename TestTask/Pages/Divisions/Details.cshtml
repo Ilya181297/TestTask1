@@ -21,7 +21,7 @@
             Дата формирования
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Division.DateOfFormation)
+            @Html.DisplayFor(model => model.Division.FormationDate)
         </dd>
         <dt class="col-sm-2">
             Описание
@@ -38,6 +38,6 @@
     </dl>
 </div>
 <div>
-    <a asp-page="./Divisions/Edit" asp-route-id="@Model.Division.ID">Редактировать</a> |
+    <a asp-page="./Divisions/Edit" asp-route-id="@Model.Division.Id">Редактировать</a> |
     <a asp-page="../Index">Назад</a>
 </div>

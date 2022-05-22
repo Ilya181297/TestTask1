@@ -33,13 +33,13 @@
             Дата рождения
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Worker.DateOfBirth)
+            @Html.DisplayFor(model => model.Worker.BirthDate)
         </dd>
         <dt class="col-sm-2">
             Пол
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Worker.GenderStr)
+            @Html.DisplayFor(model => model.Worker.Gender)
         </dd>
         <dt class="col-sm-2">
             Должность
@@ -51,7 +51,7 @@
             Водительские права
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Worker.DrivingLicense)
+            @Html.DisplayFor(model => model.Worker.IsHasDriveLicense)
         </dd>
         <dt class="col-sm-2">
             Подразделение
@@ -62,6 +62,6 @@
     </dl>
 </div>
 <div>
-    <a asp-page="./Workers/Edit" asp-route-id="@Model.Worker.ID">Редактировать</a> |
+    <a asp-page="./Workers/Edit" asp-route-id="@Model.Worker.Id">Редактировать</a> |
     <a asp-page="../Index">Назад</a>
 </div>
