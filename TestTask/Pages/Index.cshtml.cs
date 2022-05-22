@@ -31,7 +31,7 @@ namespace TestTask.Pages
             Divisions = _context.Division
                  .ToList().FindAll(x => !x.ParentId.HasValue);
 
-            SelectedDivision = _context.Division.Find(id);
+            SelectedDivision = await _context.Division.FindAsync(id);
 
             if (SelectedDivision is null)
             {
