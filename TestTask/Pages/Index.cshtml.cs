@@ -23,7 +23,6 @@ namespace TestTask.Pages
         {
             Divisions = _context.Division
                 .ToList().FindAll(x => !x.ParentId.HasValue);
-            //Divisions = _context.Division.Include(x => x.Children).Where(x => !x.ParentId.HasValue).ToList();
             Workers = await _context.Worker.Include(w => w.Division).ToListAsync();
         }
 
