@@ -1,62 +1,63 @@
 ﻿#nullable disable
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
-using TestTask.Data;
 using TestTask.Models;
+using TestTask.Services;
 
 namespace TestTask.Pages
 {
     public class IndexModel : PageModel
     {
-        private readonly TestTaskContext _context;
-        public IndexModel(TestTaskContext context)
+        private readonly IWorkerService _workerService;
+
+        private readonly ILogger<IndexModel> _logger;
+        public IndexModel(IWorkerService workerService, ILogger<IndexModel> logger)
         {
-            _context = context;
+            _workerService = workerService;
+            _logger = logger;
         }
 
         public List<Division> Divisions { get; set; }
         public List<Worker> Workers { get; set; }
         public Division SelectedDivision { get; set; }
 
-        public async Task OnGetAsync()
+        public void OnGet()
         {
-            Divisions = _context.Division
-                .ToList().FindAll(x => !x.ParentId.HasValue);
-            Workers = await _context.Worker.Include(w => w.Division).ToListAsync();
+            try
+            {
+                Divisions = _workerService.GetDivisions().FindAll(x => !x.ParentId.HasValue);
+                Workers = _workerService.GetWorkers();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred in the method Index/OnGet");
+            }
         }
 
-        public async Task<IActionResult> OnGetFilter(int id)
+        public IActionResult OnGetFilter(int id)
         {
-            Divisions = _context.Division
-                 .ToList().FindAll(x => !x.ParentId.HasValue);
-
-            SelectedDivision = await _context.Division.FindAsync(id);
-
-            if (SelectedDivision is null)
+            try
             {
-                Workers = _context.Worker.Include(w => w.Division).ToList();
+                Divisions = _workerService.GetDivisions().FindAll(x => !x.ParentId.HasValue);
+
+                SelectedDivision = _workerService.GetDivision(id);
+
+                if (SelectedDivision is null)
+                {
+                    Workers = _workerService.GetWorkers();
+
+                    return Page();
+                }
+
+                Workers = _workerService.GetAllWorkersByDivision(SelectedDivision);
 
                 return Page();
             }
-
-            FillRecursive(SelectedDivision);
-
-            Workers = _context.Worker
-                .Where(x => _childIds.Contains(x.DivisionId) || x.DivisionId == id)
-                .Include(x => x.Division)
-                .ToList();
-
-            return Page();
-        }
-
-        private readonly List<int> _childIds = new();
-        private void FillRecursive(Division division)
-        {
-            foreach (var child in division.Children)
+            catch (Exception ex)
             {
-                _childIds.Add(child.Id);
-                FillRecursive(child);
+                _logger.LogError(ex, "An error occurred in the method Index/OnGetFilter");
+
+                return Page();
             }
         }
     }

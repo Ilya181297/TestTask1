@@ -1,31 +1,41 @@
 ﻿#nullable disable
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
-using TestTask.Data;
 using TestTask.Models;
+using TestTask.Services;
 
 namespace TestTask.Pages.Workers
 {
     public class DetailsModel : PageModel
     {
-        private readonly TestTaskContext _context;
-        public DetailsModel(TestTaskContext context)
+        private readonly IWorkerService _workerService;
+
+        private readonly ILogger<DetailsModel> _logger;
+        public DetailsModel(IWorkerService workerService, ILogger<DetailsModel> logger)
         {
-            _context = context;
+           _workerService = workerService;
+            _logger = logger;
         }
 
         public Worker Worker { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(int id)
+        public IActionResult OnGet(int id)
         {
-            Worker = await _context.Worker
-                .Include(w => w.Division).FirstOrDefaultAsync(m => m.Id == id);
+            try
+            {
+                Worker = _workerService.GetWorker(id);
 
-            if (Worker is null)
-                return NotFound($"Division with Id={id} is not found");
+                if (Worker is null)
+                    return NotFound($"Division with Id={id} is not found");
 
-            return Page();
+                return Page();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred in the method Workers/Details/OnGet");
+
+                return Page();
+            }
         }
     }
 }

@@ -1,12 +1,20 @@
 using Microsoft.EntityFrameworkCore;
 using TestTask.Data;
+using TestTask.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
 // Add services to the container.
 builder.Services.AddRazorPages(); 
 
 builder.Services.AddDbContext<TestTaskContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("TestTaskContext") ?? throw new InvalidOperationException("Connection string 'TestTaskContext' not found.")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("TestTaskContext") ?? throw new InvalidOperationException("Connection string 'TestTaskContext' not found."))
+    , ServiceLifetime.Singleton);
+
+
+builder.Services.AddSingleton<IWorkerService, WorkerService>();
 
 var app = builder.Build();
 
@@ -23,9 +31,11 @@ using (var scope = app.Services.CreateScope())
 
     var context = services.GetRequiredService<TestTaskContext>();
     context.Database.Migrate();
-}
 
-app.UseHttpsRedirection();
+    var workerService = services.GetRequiredService<IWorkerService>();
+    workerService.InitializeCache();
+}
+    app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();

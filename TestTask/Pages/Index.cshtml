@@ -23,18 +23,12 @@
                     {
                         <li type="disc">
                             <a asp-route-id="@item.Id" asp-page-handler="Filter">@item.Name</a>
-                            <a asp-page="./Divisions/Edit" asp-route-id="@item.Id">
-                                <img src="images/edit.png" width="15"
-                             height="15" alt="Редактировать">
-                            </a>
-                            <a asp-page="./Divisions/Details" asp-route-id="@item.Id">
-                                <img src="images/details.png" width="15"
-                             height="15" alt="Просмотр">
-                            </a>
-                            <a asp-page="./Divisions/Delete" asp-route-id="@item.Id">
-                                <img src="images/delete.png" width="15"
-                             height="15" alt="Удалить">
-                            </a>
+                            <a asp-page="./Divisions/Details" asp-route-id="@item.Id"><img src="images/details.png" width="15"
+                             height="15" alt="Просмотр"></a>
+                            <a asp-page="./Divisions/Edit" asp-route-id="@item.Id"><img src="images/edit.png" width="15"
+                             height="15" alt="Редактировать"></a>
+                            <a asp-page="./Divisions/Delete" asp-route-id="@item.Id"><img src="images/delete.png" width="15"
+                             height="15" alt="Удалить"></a>
                             @if (item.Children.Count > 0)
                             {
                                 await ShowTreeData(item.Children.ToList());
@@ -122,18 +116,12 @@
 
                             </td>
                             <td>
-                                <a asp-page="./Workers/Edit" asp-route-id="@item.Id">
-                                    <img src="images/edit.png" width="20"
-                                 height="20" alt="Редактировать">
-                                </a>
-                                <a asp-page="./Workers/Details" asp-route-id="@item.Id">
-                                    <img src="images/details.png" width="20"
-                                 height="20" alt="Просмотр">
-                                </a>
-                                <a asp-page="./Workers/Delete" asp-route-id="@item.Id">
-                                    <img src="images/delete.png" width="20"
-                                 height="20" alt="Удалить">
-                                </a>
+                                <a asp-page="./Workers/Details" asp-route-id="@item.Id"><img src="images/details.png" width="20"
+                                 height="20" alt="Просмотр"></a>
+                                <a asp-page="./Workers/Edit" asp-route-id="@item.Id"><img src="images/edit.png" width="20"
+                                 height="20" alt="Редактировать"></a>
+                                <a asp-page="./Workers/Delete" asp-route-id="@item.Id"><img src="images/delete.png" width="20"
+                                 height="20" alt="Удалить"></a>
                             </td>
                         </tr>
                 }
