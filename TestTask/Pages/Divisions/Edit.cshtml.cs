@@ -2,15 +2,21 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using TestTask.Data;
 using TestTask.Models;
+using TestTask.Services;
 
 namespace TestTask.Pages.Divisions
 {
     public class EditModel : PageModel
     {
-        private readonly TestTaskContext _context;
+        private readonly IWorkerService _workerService;
+
+        private readonly ILogger<EditModel> _logger;
+        public EditModel(IWorkerService workerService, ILogger<EditModel> logger)
+        {
+            _workerService = workerService;
+            _logger = logger;
+        }
         public List<SelectListItem> Divisions { get; set; }
 
         [BindProperty]
@@ -19,61 +25,56 @@ namespace TestTask.Pages.Divisions
         [BindProperty]
         public int SelectedParentId { get; set; }
 
-        public EditModel(TestTaskContext context)
-        {
-            _context = context;
-        }
         public IActionResult OnGet(int id)
         {
-            Divisions = _context.Division
-                     .Where(x => x.Id != id)
-                     .Select(x => new SelectListItem
-                     {
-                         Value = x.Id.ToString(),
-                         Text = x.Name
-                     })
-                     .ToList();
-
-            Divisions.Insert(0, new SelectListItem { Value = "0", Text = "Корневой" });
-
-            if (id == 0)
+            try
             {
-                Division = new Division();
-                Division.FormationDate = DateTime.Today;
+                Divisions = PageHelper.ConvertToSelectList(_workerService
+                .GetDivisions().Where(x => x.Id != id), true);
+
+                if (id == 0)
+                {
+                    Division = new Division();
+                    Division.FormationDate = DateTime.Today;
+
+                    return Page();
+                }
+
+                Division = _workerService.GetDivision(id);
+
+                if (Division is null)
+                    return NotFound();
+
+                SelectedParentId = Division.ParentId ?? 0;
 
                 return Page();
             }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred in the method Divisions/Edit/OnGet");
 
-            Division = _context.Division.FirstOrDefault(m => m.Id == id);
-            if (Division is null)
-                return NotFound();
-
-            SelectedParentId = Division.ParentId ?? 0;
-
-            return Page();
+                return Page();
+            }
         }
 
-        public async Task<IActionResult> OnPostAsync()
+        public IActionResult OnPost()
         {
-            if (!ModelState.IsValid)
-                return Page();
-
-            if (Division.Id == 0)
+            try
             {
-                if (SelectedParentId > 0)
-                    Division.ParentId = SelectedParentId;
+                if (!ModelState.IsValid)
+                    return Page();
 
-                _context.Division.Add(Division);
-            }
-            else
-            {
                 Division.ParentId = SelectedParentId == 0 ? null : SelectedParentId;
-                _context.Attach(Division).State = EntityState.Modified;
+                _workerService.SaveDivision(Division);
+
+                return RedirectToPage("../Index");
             }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred in the method Divisions/Edit/OnPost");
 
-            await _context.SaveChangesAsync();
-
-            return RedirectToPage("../Index");
+                return Page();
+            }
         }
     }
 }

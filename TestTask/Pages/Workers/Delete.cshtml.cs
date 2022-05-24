@@ -1,46 +1,58 @@
 ﻿#nullable disable
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.EntityFrameworkCore;
-using TestTask.Data;
 using TestTask.Models;
+using TestTask.Services;
 
 namespace TestTask.Pages.Workers
 {
     public class DeleteModel : PageModel
     {
-        private readonly TestTaskContext _context;
+        private readonly IWorkerService _workerService;
 
-        public DeleteModel(TestTaskContext context)
+        private readonly ILogger<DeleteModel> _logger;
+        public DeleteModel(IWorkerService workerService, ILogger<DeleteModel> logger)
         {
-            _context = context;
+            _workerService = workerService;
+            _logger = logger;   
         }
 
         [BindProperty]
         public Worker Worker { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(int id)
+        public IActionResult OnGet(int id)
         {
-            Worker = await _context.Worker
-                .Include(w => w.Division).FirstOrDefaultAsync(m => m.Id == id);
+            try
+            {
+                Worker = _workerService.GetWorker(id);
 
-            if (Worker is null)
-                return NotFound($"Division with Id={id} is not found");
+                if (Worker is null)
+                    return NotFound($"Division with Id={id} is not found");
 
-            return Page();
+                return Page();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred in the method Workers/Delete/OnGet");
+
+                return Page();
+            }
         }
 
-        public async Task<IActionResult> OnPostAsync(int id)
+        public IActionResult OnPost(int id)
         {
-            Worker = await _context.Worker.FindAsync(id);
-
-            if (Worker is not null)
+            try
             {
-                _context.Worker.Remove(Worker);
-                await _context.SaveChangesAsync();
-            }
+                _workerService.DeleteWorker(id);
 
-            return RedirectToPage("../Index");
+                return RedirectToPage("../Index");
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred in the method Workers/Index/OnPost");
+
+                return Page();
+            }
         }
     }
 }
