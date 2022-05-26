@@ -1,4 +1,5 @@
-﻿using TestTask.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using TestTask.Models;
 
 namespace TestTask.Services
 {

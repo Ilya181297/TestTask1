@@ -3,11 +3,11 @@
 @model TestTask.Pages.IndexModel
 
 <div style="display: inline-block; width: 100%">
-    <h1>Справочник</h1>
+    <h1 style="position: relative; left: -8%;">Справочник</h1>
     <div style="float: left; margin-left: -10%; width: 22%; border-right: 1px solid;">
 
         <p>
-            <a asp-route-id="0" asp-page="./Divisions/Edit">Добавить подразделение </a></br>
+            <a asp-route-id="0" asp-page="./Divisions/Edit" style="position: relative; right: -10%;">Добавить подразделение </a></br>
         </p>
 
         @{
@@ -51,7 +51,7 @@
 
         <table class="table" style="margin-left: -10%; padding-right: 0;" name="table">
             <tr text-align="right">
-                <a asp-route-id="0" asp-page="./Workers/Edit">Добавить работника</a>
+                <a asp-route-id="0" asp-page="./Workers/Edit" style="position: relative; left: -10%;">Добавить работника</a>
             </tr>
             <thead>
                 <tr>

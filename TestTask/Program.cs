@@ -13,7 +13,6 @@ builder.Services.AddDbContext<TestTaskContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("TestTaskContext") ?? throw new InvalidOperationException("Connection string 'TestTaskContext' not found."))
     , ServiceLifetime.Singleton);
 
-
 builder.Services.AddSingleton<IWorkerService, WorkerService>();
 
 var app = builder.Build();

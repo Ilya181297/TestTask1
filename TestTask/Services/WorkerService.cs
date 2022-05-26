@@ -1,4 +1,5 @@
-﻿using TestTask.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using TestTask.Data;
 using TestTask.Models;
 
 namespace TestTask.Services
@@ -58,6 +59,7 @@ namespace TestTask.Services
                 _context.Entry(entry).Reference(c => c.Division).Load();
                 worker = entry;
             }
+
             _context.SaveChanges();
             _workersByIdDict[worker.Id] = worker;
         }
