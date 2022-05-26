@@ -30,7 +30,7 @@ namespace TestTask.Services
         private void UpdateModelInCache(Division division)
         {
             if (!_divisionByIdDict.TryGetValue(division.Id, out var divisionInCache))
-                throw new ArgumentException($"Worker with Id={division.Id} does not exist in cache");
+                throw new ArgumentException($"Division with Id={division.Id} does not exist in cache");
 
             divisionInCache.Name = division.Name;
             divisionInCache.FormationDate = division.FormationDate;
