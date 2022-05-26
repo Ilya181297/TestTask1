@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using TestTask.Data;
+﻿using TestTask.Data;
 using TestTask.Models;
 
 namespace TestTask.Services
@@ -9,7 +8,7 @@ namespace TestTask.Services
         private readonly TestTaskContext _context;
         public WorkerService(TestTaskContext context)
         {
-            _context = context;
+            _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
         public void DeleteDivision(int id)
@@ -34,34 +33,28 @@ namespace TestTask.Services
 
         public void SaveDivision(Division division)
         {
+            if (division is null)
+                throw new ArgumentNullException(nameof(division));
+
             if (division.Id == 0)
                 _context.Division.Add(division);
             else
-            {
-                var entry = _context.Division.FirstOrDefault(m => m.Id == division.Id);
-                _context.Entry(entry).CurrentValues.SetValues(division);
-                _context.Entry(entry).Collection(c => c.Children).Load();
-                division = entry;
-            }
+                UpdateModelInCache(division);
 
             _context.SaveChanges();
-            _divisionByIdDict[division.Id] = division;
         }
 
         public void SaveWorker(Worker worker)
         {
+            if (worker is null)
+                throw new ArgumentNullException(nameof(worker));
+
             if (worker.Id == 0)
                 _context.Worker.Add(worker);
             else
-            {
-                var entry = _context.Worker.FirstOrDefault(m => m.Id == worker.Id);
-                _context.Entry(entry).CurrentValues.SetValues(worker);
-                _context.Entry(entry).Reference(c => c.Division).Load();
-                worker = entry;
-            }
+                UpdateModelInCache(worker);
 
             _context.SaveChanges();
-            _workersByIdDict[worker.Id] = worker;
         }
 
         public Division? GetDivision(int id)
