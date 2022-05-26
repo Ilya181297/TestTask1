@@ -39,7 +39,7 @@ else
                 <input asp-for="Worker.BirthDate" class="form-control" />
                 <span asp-validation-for="Worker.BirthDate" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div style="margin-top: 8px;" class="form-group">
                 <label asp-for="Worker.GenderId" class="control-label">Пол</label>
                 <select asp-for="SelectedGender" asp-items="Model.Genders">
                 </select>
@@ -54,12 +54,12 @@ else
                     <input class="form-check-input" asp-for="Worker.IsHasDriveLicense" /> Водительские права
                 </label>
             </div>
-            <div class="form-group">
+            <div style="margin-top: 8px;" class="form-group">
                 <label asp-for="Worker.DivisionId" class="control-label">Подразделение</label>
                 <select asp-for="SelectedDivisionId" asp-items="Model.Divisions">
                 </select>
             </div>
-            <div class="form-group">
+            <div style="margin-top: 8px;" class="form-group">
                 @if (Model.Worker.Id == 0)
                 {
                     <input type="submit" value="Добавить" class="btn btn-primary" />
