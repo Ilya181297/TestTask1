@@ -1,14 +1,14 @@
 ﻿@page
 @using TestTask.Models
+@using TestTask.Services
 @model TestTask.Pages.Divisions.DetailsModel
 
 @{
     ViewData["Title"] = "Details";
 }
 
-<h1>Детали</h1>
+<h1>Детали подразделения</h1>
 <div>
-    <h4>Подразделения</h4>
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
@@ -39,5 +39,5 @@
 </div>
 <div>
     <a asp-page="./Divisions/Edit" asp-route-id="@Model.Division.Id">Редактировать</a> |
-    <a asp-page="../Index">Назад</a>
+    <a asp-route-id="@PageHelper.SelectedDivisionIdOnFilter" asp-page-handler="Filter" asp-page="../Index/">Назад</a>
 </div>

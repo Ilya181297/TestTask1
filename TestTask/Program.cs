@@ -7,13 +7,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 // Add services to the container.
-builder.Services.AddRazorPages(); 
+builder.Services.AddRazorPages();
 
 builder.Services.AddDbContext<TestTaskContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("TestTaskContext") ?? throw new InvalidOperationException("Connection string 'TestTaskContext' not found."))
     , ServiceLifetime.Singleton);
 
-builder.Services.AddSingleton<IWorkerService, WorkerService>();
+builder.Services.AddSingleton<ICompanyService, CompanyService>();
 
 var app = builder.Build();
 
@@ -31,15 +31,15 @@ using (var scope = app.Services.CreateScope())
     var context = services.GetRequiredService<TestTaskContext>();
     context.Database.Migrate();
 
-    var workerService = services.GetRequiredService<IWorkerService>();
+    var workerService = services.GetRequiredService<ICompanyService>();
     workerService.InitializeCache();
 }
-    app.UseHttpsRedirection();
+
+app.UseHttpsRedirection();
+
 app.UseStaticFiles();
 
 app.UseRouting();
-
-app.UseAuthorization();
 
 app.MapRazorPages();
 

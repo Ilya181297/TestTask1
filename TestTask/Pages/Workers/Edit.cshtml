@@ -1,18 +1,11 @@
 ﻿@page
+@using TestTask.Services
 @model TestTask.Pages.Workers.EditModel
 
 @{
     ViewData["Title"] = "Edit";
 }
-@if (Model.Worker.Id == 0)
-{
-    <h1>Добавить</h1>
-}
-else
-{
-    <h1>Редактировать</h1>
-}
-<h4>Работника</h4>
+<h1>@(Model.Worker.Id == 0 ? "Создание" : "Изменение") работника</h1>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -51,7 +44,7 @@ else
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Worker.IsHasDriveLicense" /> Водительские права
+                    <input class="form-check-input" asp-for="Worker.IsHasDriveLicenseBool" /> Водительские права
                 </label>
             </div>
             <div style="margin-top: 8px;" class="form-group">
@@ -60,23 +53,16 @@ else
                 </select>
             </div>
             <div style="margin-top: 8px;" class="form-group">
-                @if (Model.Worker.Id == 0)
-                {
-                    <input type="submit" value="Добавить" class="btn btn-primary" />
-                }
-                else
-                {
-                    <input type="submit" value="Сохранить" class="btn btn-primary" />
-                }
+                <input type="submit" value="Сохранить" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-page="../Index">Назад</a>
+    <a asp-route-id="@PageHelper.SelectedDivisionIdOnFilter" asp-page-handler="Filter" asp-page="../Index/">Назад</a>
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 }

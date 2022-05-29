@@ -9,13 +9,14 @@ namespace TestTask.Pages.Workers
 {
     public class EditModel : PageModel
     {
-        private readonly IWorkerService _workerService;
+        private readonly ICompanyService _companyService;
 
         private readonly ILogger<EditModel> _logger;
-        public EditModel(IWorkerService workerService, ILogger<EditModel> logger)
+
+        public EditModel(ICompanyService companyService, ILogger<EditModel> logger)
         {
-            _workerService = workerService;
-            _logger = logger;   
+            _companyService = companyService;
+            _logger = logger;
         }
         public List<SelectListItem> Divisions { get; set; }
         public List<SelectListItem> Genders { get; set; }
@@ -34,19 +35,21 @@ namespace TestTask.Pages.Workers
             try
             {
                 Genders = PageHelper.GetGenderListItems();
-                Divisions = PageHelper.ConvertToSelectList(_workerService.GetDivisions());
+                Divisions = PageHelper.ConvertToSelectList(_companyService.GetDivisions());
 
                 if (id == 0)
                 {
                     Worker = new Worker();
+                    Worker.BirthDate = DateTime.Today.AddYears(-18);
+                    SelectedDivisionId = PageHelper.SelectedDivisionIdOnFilter ?? 0;
 
                     return Page();
                 }
 
-                Worker = _workerService.GetWorker(id);
+                Worker = _companyService.GetWorker(id);
 
                 if (Worker is null)
-                    return NotFound();
+                    return NotFound($"Worker with Id={id} is not found");
 
                 SelectedDivisionId = Worker.DivisionId;
                 SelectedGender = Worker.GenderId;
@@ -55,7 +58,7 @@ namespace TestTask.Pages.Workers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred in the method Workers/Edit/OnGet");
+                _logger.LogError(ex, PageHelper.GetErrorMessage("Workers/Edit/OnGet"));
 
                 return Page();
             }
@@ -71,13 +74,13 @@ namespace TestTask.Pages.Workers
                 Worker.DivisionId = SelectedDivisionId;
                 Worker.GenderId = SelectedGender;
 
-                _workerService.SaveWorker(Worker);
+                _companyService.SaveWorker(Worker);
 
-                return RedirectToPage("../Index");
+                return RedirectToPage("../Index", new { id = PageHelper.SelectedDivisionIdOnFilter });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred in the method Workers/Edit/OnPost");
+                _logger.LogError(ex, PageHelper.GetErrorMessage("Workers/Edit/OnPost"));
 
                 return Page();
             }

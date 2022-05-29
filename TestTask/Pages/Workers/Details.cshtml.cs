@@ -8,12 +8,13 @@ namespace TestTask.Pages.Workers
 {
     public class DetailsModel : PageModel
     {
-        private readonly IWorkerService _workerService;
+        private readonly ICompanyService _companyService;
 
         private readonly ILogger<DetailsModel> _logger;
-        public DetailsModel(IWorkerService workerService, ILogger<DetailsModel> logger)
+
+        public DetailsModel(ICompanyService companyService, ILogger<DetailsModel> logger)
         {
-           _workerService = workerService;
+           _companyService = companyService;
             _logger = logger;
         }
 
@@ -23,16 +24,16 @@ namespace TestTask.Pages.Workers
         {
             try
             {
-                Worker = _workerService.GetWorker(id);
+                Worker = _companyService.GetWorker(id);
 
                 if (Worker is null)
-                    return NotFound($"Division with Id={id} is not found");
+                    return NotFound($"Worker with Id={id} is not found");
 
                 return Page();
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred in the method Workers/Details/OnGet");
+                _logger.LogError(ex, PageHelper.GetErrorMessage("Workers/Details/OnGet"));
 
                 return Page();
             }

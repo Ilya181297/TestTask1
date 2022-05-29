@@ -20,5 +20,13 @@ namespace TestTask.Models
         public virtual Division? Parent { get; set; }
         public virtual ICollection<Division> Children { get; set; }
         public virtual ICollection<Worker> Workers { get; set; }
+
+        public bool HasParent(int id)
+        {
+            if (ParentId == id)
+                return true;
+
+            return Parent is not null && Parent.HasParent(id);
+        }
     }
 }
