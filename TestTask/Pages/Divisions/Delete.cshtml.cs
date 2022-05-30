@@ -8,22 +8,24 @@ namespace TestTask.Pages.Divisions
 {
     public class DeleteModel : PageModel
     {
-        private readonly IWorkerService _workerService;
+        private readonly ICompanyService _companyService;
 
         private readonly ILogger<DeleteModel> _logger;
-        public DeleteModel(IWorkerService workerService, ILogger<DeleteModel> logger)
+
+        public DeleteModel(ICompanyService companyService, ILogger<DeleteModel> logger)
         {
-            _workerService = workerService;
+            _companyService = companyService;
             _logger = logger;
         }
 
         [BindProperty]
         public Division Division { get; set; }
+
         public IActionResult OnGet(int id)
         {
             try
             {
-                Division = _workerService.GetDivision(id);
+                Division = _companyService.GetDivision(id);
 
                 if (Division is null)
                     return NotFound($"Division with Id={id} is not found");
@@ -32,7 +34,7 @@ namespace TestTask.Pages.Divisions
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred in the method Divisions/Delete/OnGet");
+                _logger.LogError(ex, PageHelper.GetErrorMessage("Divisions/Delete/OnGet"));
 
                 return Page();
             }
@@ -42,13 +44,13 @@ namespace TestTask.Pages.Divisions
         {
             try
             {
-                _workerService.DeleteDivision(id);
+                _companyService.DeleteDivision(id);
 
-                return RedirectToPage("../Index");
+                return RedirectToPage("../Index", new { id = PageHelper.SelectedDivisionIdOnFilter });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred in the method Divisions/Delete/OnPost");
+                _logger.LogError(ex, PageHelper.GetErrorMessage("Divisions/Delete OnPost"));
 
                 return Page();
             }

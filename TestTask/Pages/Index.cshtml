@@ -1,4 +1,4 @@
-﻿@page
+﻿@page 
 @using TestTask.Models
 @model TestTask.Pages.IndexModel
 
@@ -23,8 +23,8 @@
                     {
                         <li type="disc">
                             <a asp-route-id="@item.Id" asp-page-handler="Filter">@item.Name</a>
-                            <a asp-page="./Divisions/Details" asp-route-id="@item.Id"><img src="images/details.png" width="15"
-                             height="15" alt="Просмотр"></a>
+                            <a asp-page="./Divisions/Details" asp-route-id="@item.Id"><img src="images/details.png" width="15" 
+                            height="15" alt="Просмотр"></a>
                             <a asp-page="./Divisions/Edit" asp-route-id="@item.Id"><img src="images/edit.png" width="15"
                              height="15" alt="Редактировать"></a>
                             <a asp-page="./Divisions/Delete" asp-route-id="@item.Id"><img src="images/delete.png" width="15"
@@ -43,7 +43,7 @@
 
         @if (Model.SelectedDivision != null)
         {
-            <div>
+            <div style="position: relative; left: -10%;">
                 Выбранное подразделение: @Html.DisplayFor(model => Model.SelectedDivision.Name)
                 <a asp-route-id="0" asp-page-handler="Filter">Отменить фильтр</a>
             </div>
@@ -108,7 +108,7 @@
                             @Html.DisplayFor(modelItem => item.Post)
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.IsHasDriveLicense)
+                            @Html.DisplayFor(modelItem => item.IsHasDriveLicenseBool)
                         </td>
                         <td>
                             @if (item.Division is not null)

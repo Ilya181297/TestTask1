@@ -8,12 +8,12 @@ namespace TestTask.Pages.Divisions
 {
     public class DetailsModel : PageModel
     {
-        private readonly IWorkerService _workerService;
+        private readonly ICompanyService _companyService;
 
         private readonly ILogger<DetailsModel> _logger;
-        public DetailsModel(IWorkerService workerService, ILogger<DetailsModel> logger)
+        public DetailsModel(ICompanyService companyService, ILogger<DetailsModel> logger)
         {
-            _workerService = workerService;
+            _companyService = companyService;
             _logger = logger;
         }
         public Division Division { get; set; }
@@ -22,7 +22,7 @@ namespace TestTask.Pages.Divisions
         {
             try
             {
-                Division = _workerService.GetDivision(id);
+                Division = _companyService.GetDivision(id);
 
                 if (Division is null)
                     return NotFound($"Division with Id={id} is not found");
@@ -31,7 +31,7 @@ namespace TestTask.Pages.Divisions
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred in the method Divisions/Details/OnGet");
+                _logger.LogError(ex, PageHelper.GetErrorMessage("Divisions/Details/OnGet"));
 
                 return Page();
             }

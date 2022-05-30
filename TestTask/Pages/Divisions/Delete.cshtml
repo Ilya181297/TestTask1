@@ -1,15 +1,13 @@
 ﻿@page
+@using TestTask.Services
 @model TestTask.Pages.Divisions.DeleteModel
 
 @{
     ViewData["Title"] = "Delete";
 }
 
-<h1>Удалить</h1>
-
-<h3>Вы уверены, что хотите удалить это?</h3>
+<h3>Вы уверены, что хотите удалить подразделение?</h3>
 <div>
-    <h4>Подразделение</h4>
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
@@ -31,10 +29,10 @@
             @Html.DisplayFor(model => model.Division.Description)
         </dd>
     </dl>
-    
+
     <form method="post">
         <input type="hidden" asp-for="Division.Id" />
         <input type="submit" value="Удалить" class="btn btn-danger" /> |
-        <a asp-page="../Index">Назад</a>
+        <a asp-route-id="@PageHelper.SelectedDivisionIdOnFilter" asp-page-handler="Filter" asp-page="../Index/">Назад</a>
     </form>
 </div>

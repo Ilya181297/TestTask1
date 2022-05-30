@@ -5,10 +5,9 @@
     ViewData["Title"] = "Details";
 }
 
-<h1>Детали</h1>
+<h1>Детали работника</h1>
 
 <div>
-    <h4>Работника</h4>
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
@@ -51,7 +50,7 @@
             Водительские права
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Worker.IsHasDriveLicense)
+            @Html.DisplayFor(model => model.Worker.IsHasDriveLicenseBool)
         </dd>
         <dt class="col-sm-2">
             Подразделение
@@ -63,5 +62,5 @@
 </div>
 <div>
     <a asp-page="./Workers/Edit" asp-route-id="@Model.Worker.Id">Редактировать</a> |
-    <a asp-page="../Index">Назад</a>
+    <a asp-route-id="@PageHelper.SelectedDivisionIdOnFilter" asp-page-handler="Filter" asp-page="../Index/">Назад</a>
 </div>

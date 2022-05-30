@@ -2,20 +2,20 @@
 
 namespace TestTask.Services
 {
-    public partial class WorkerService
+    public partial class CompanyService
     {
-        private Dictionary<int, Worker> _workersByIdDict = new Dictionary<int, Worker>();
-        private Dictionary<int, Division> _divisionByIdDict = new Dictionary<int, Division>();
+        private Dictionary<int, Worker> _workersDict = new Dictionary<int, Worker>();
+        private Dictionary<int, Division> _divisionDict = new Dictionary<int, Division>();
 
         public void InitializeCache()
         {
-            _workersByIdDict = _context.Worker.ToDictionary(x => x.Id);
-            _divisionByIdDict = _context.Division.ToDictionary(x => x.Id);
+            _workersDict = _context.Worker.ToDictionary(x => x.Id);
+            _divisionDict = _context.Division.ToDictionary(x => x.Id);
         }
 
         private void UpdateModelInCache(Worker worker)
         {
-            if (!_workersByIdDict.TryGetValue(worker.Id, out var workerInCache))
+            if (!_workersDict.TryGetValue(worker.Id, out var workerInCache))
                 throw new ArgumentException($"Worker with Id={worker.Id} does not exist in cache");
 
             workerInCache.Name = worker.Name;
@@ -29,13 +29,18 @@ namespace TestTask.Services
         }
         private void UpdateModelInCache(Division division)
         {
-            if (!_divisionByIdDict.TryGetValue(division.Id, out var divisionInCache))
+            if (!_divisionDict.TryGetValue(division.Id, out var divisionInCache))
                 throw new ArgumentException($"Division with Id={division.Id} does not exist in cache");
 
             divisionInCache.Name = division.Name;
             divisionInCache.FormationDate = division.FormationDate;
             divisionInCache.Description = division.Description;
             divisionInCache.ParentId = division.ParentId;
+        }
+        private void DeleteWorkersFromCache(IEnumerable<int> workerIds)
+        {
+            foreach (var workerId in workerIds)
+                _workersDict.Remove(workerId);
         }
     }
 }

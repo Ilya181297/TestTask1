@@ -8,13 +8,14 @@ namespace TestTask.Pages.Workers
 {
     public class DeleteModel : PageModel
     {
-        private readonly IWorkerService _workerService;
+        private readonly ICompanyService _companyService;
 
         private readonly ILogger<DeleteModel> _logger;
-        public DeleteModel(IWorkerService workerService, ILogger<DeleteModel> logger)
+
+        public DeleteModel(ICompanyService companyService, ILogger<DeleteModel> logger)
         {
-            _workerService = workerService;
-            _logger = logger;   
+            _companyService = companyService;
+            _logger = logger;
         }
 
         [BindProperty]
@@ -24,16 +25,16 @@ namespace TestTask.Pages.Workers
         {
             try
             {
-                Worker = _workerService.GetWorker(id);
+                Worker = _companyService.GetWorker(id);
 
                 if (Worker is null)
-                    return NotFound($"Division with Id={id} is not found");
+                    return NotFound($"Worker with Id={id} is not found");
 
                 return Page();
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred in the method Workers/Delete/OnGet");
+                _logger.LogError(ex, PageHelper.GetErrorMessage("Workers/Delete/OnGet"));
 
                 return Page();
             }
@@ -43,13 +44,13 @@ namespace TestTask.Pages.Workers
         {
             try
             {
-                _workerService.DeleteWorker(id);
+                _companyService.DeleteWorker(id);
 
-                return RedirectToPage("../Index");
+                return RedirectToPage("../Index", new { id = PageHelper.SelectedDivisionIdOnFilter });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred in the method Workers/Index/OnPost");
+                _logger.LogError(ex, PageHelper.GetErrorMessage("Workers/Index/OnPost"));
 
                 return Page();
             }

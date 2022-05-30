@@ -1,10 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using TestTask.Data.Models;
 using TestTask.Models;
 
 namespace TestTask.Pages
 {
     public static class PageHelper
     {
+        public static int? SelectedDivisionIdOnFilter;
+
         private static readonly SelectListItem _rootItem = new SelectListItem { Value = "0", Text = "Корневой" };
         public static List<SelectListItem> ConvertToSelectList(IEnumerable<Division> divisions, bool withRootItem = false)
         {
@@ -30,5 +33,7 @@ namespace TestTask.Pages
                     })
                     .ToList();
         }
+
+        public static string GetErrorMessage(string sourceName) => $"An error occurred in the method {sourceName}";
     }
 }
