@@ -1,26 +1,43 @@
 ﻿#nullable disable
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using TestTask.Common;
 using TestTask.Models;
 using TestTask.Services;
 
 namespace TestTask.Pages.Workers
 {
+    /// <summary>
+    /// Страница для подтверждения удаления работника
+    /// </summary>
     public class DeleteModel : PageModel
     {
-        private readonly ICompanyService _companyService;
-
+        private readonly ITestTaskService _companyService;
         private readonly ILogger<DeleteModel> _logger;
+        private readonly PageHelper _pageHelper;
 
-        public DeleteModel(ICompanyService companyService, ILogger<DeleteModel> logger)
+        /// <summary>
+        /// Конструктор страницы
+        /// </summary>
+        /// <param name="testTaskService">Сервис для работы с подразделениями и сотрудниками</param>
+        /// <param name="logger">Логер</param>
+        public DeleteModel(ITestTaskService companyService, ILogger<DeleteModel> logger)
         {
             _companyService = companyService;
             _logger = logger;
+            _pageHelper = new PageHelper();
         }
 
+        /// <summary>
+        /// Полученная модель работника
+        /// </summary>
         [BindProperty]
         public Worker Worker { get; set; }
 
+        /// <summary>
+        /// Заполняет работника в соответсвтии с идентификтором
+        /// </summary>
+        /// <param name="id">Идентификатор работника</param>
         public IActionResult OnGet(int id)
         {
             try
@@ -34,23 +51,27 @@ namespace TestTask.Pages.Workers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, PageHelper.GetErrorMessage("Workers/Delete/OnGet"));
+                _logger.LogError(ex, _pageHelper.GetErrorMessage("Workers/Delete/OnGet"));
 
                 return Page();
             }
         }
 
+        /// <summary>
+        /// Удаленят работника в соответсвтии с идентификтором
+        /// </summary>
+        /// <param name="id">Идентификатор работника</param>
         public IActionResult OnPost(int id)
         {
             try
             {
                 _companyService.DeleteWorker(id);
 
-                return RedirectToPage("../Index", new { id = PageHelper.SelectedDivisionIdOnFilter });
+                return RedirectToPage("../Index", new { id = _pageHelper.GetFilterIdOnSession(HttpContext) });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, PageHelper.GetErrorMessage("Workers/Index/OnPost"));
+                _logger.LogError(ex, _pageHelper.GetErrorMessage("Workers/Index/OnPost"));
 
                 return Page();
             }

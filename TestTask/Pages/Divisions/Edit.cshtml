@@ -1,4 +1,5 @@
 ﻿@page
+@using TestTask.Common
 @using TestTask.Models
 @model TestTask.Pages.Divisions.EditModel
 
@@ -41,7 +42,7 @@
 </div>
 
 <div>
-    <a asp-route-id="@PageHelper.SelectedDivisionIdOnFilter" asp-page-handler="Filter" asp-page="../Index/">Назад</a>
+    <a asp-route-id="@HttpContext.Session.GetInt32("SelectedDivisionId")" asp-page-handler="Filter" asp-page="../Index/">Назад</a>
 </div>
 
 @section Scripts {

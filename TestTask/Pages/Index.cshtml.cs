@@ -1,46 +1,69 @@
 ﻿#nullable disable
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using TestTask.Common;
 using TestTask.Models;
 using TestTask.Services;
 
 namespace TestTask.Pages
 {
+    /// <summary>
+    /// Главная страница справочника
+    /// </summary>
     public class IndexModel : PageModel
     {
-        private readonly ICompanyService _companyService;
+        private readonly ITestTaskService _companyService;
 
         private readonly ILogger<IndexModel> _logger;
 
-        public IndexModel(ICompanyService companyService, ILogger<IndexModel> logger)
+        private readonly PageHelper _pageHelper;
+
+        /// <summary>
+        /// Конструктор страницы
+        /// </summary>
+        /// <param name="testTaskService">Сервис для работы с подразделениями и сотрудниками</param>
+        /// <param name="logger">Логер</param>
+        public IndexModel(ITestTaskService companyService, ILogger<IndexModel> logger)
         {
             _companyService = companyService;
             _logger = logger;
+            _pageHelper = new PageHelper();
         }
 
+        /// <summary>
+        /// Список подразделений
+        /// </summary>
         public List<Division> Divisions { get; set; }
+
+        /// <summary>
+        /// Список работников
+        /// </summary>
         public List<Worker> Workers { get; set; }
+
+        /// <summary>
+        /// Выбранное подразделение для фильтрации
+        /// </summary>
         public Division SelectedDivision { get; set; }
 
+        /// <summary>
+        /// Заполняет работников в соответсвтии с выбранным идентификтором подразделения
+        /// </summary>
+        /// <param name="id">Идентификатор подразделения</param>
         public void OnGet(int id)
         {
             try
             {
+                _pageHelper.SetFilterIdOnSession(HttpContext, id);
+
                 Divisions = _companyService.GetDivisions().FindAll(x => !x.ParentId.HasValue);
                 SelectedDivision = _companyService.GetDivision(id);
-                
-                if (SelectedDivision is null)
-                {
-                    Workers = _companyService.GetWorkers();
-                    PageHelper.SelectedDivisionIdOnFilter = null;
-                    return;
-                }
 
-                PageHelper.SelectedDivisionIdOnFilter = SelectedDivision.Id;
-                Workers = _companyService.GetAllWorkersByDivision(SelectedDivision);
+                Workers = SelectedDivision is null 
+                    ? _companyService.GetWorkers() 
+                    : _companyService.GetAllWorkersByDivision(SelectedDivision);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, PageHelper.GetErrorMessage("Index/OnGetFilter"));
+                _logger.LogError(ex, _pageHelper.GetErrorMessage("Index/OnGetFilter"));
             }
         }
     }
