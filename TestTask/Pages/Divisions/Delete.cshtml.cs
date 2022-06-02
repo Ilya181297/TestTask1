@@ -14,7 +14,7 @@ namespace TestTask.Pages.Divisions
     {
         private readonly ITestTaskService _testTaskService;
         private readonly ILogger<DeleteModel> _logger;
-        private readonly PageHelper _pageHelper;
+        public readonly PageHelper _pageHelper;
 
         /// <summary>
         /// Конструктор страницы
@@ -35,7 +35,7 @@ namespace TestTask.Pages.Divisions
         public Division Division { get; set; }
 
         /// <summary>
-        /// Заполняет подразделение в соответсвтии с идентификтором
+        /// Возвращает страницу с заполненным подразделением в соответсвтии с идентификатором
         /// </summary>
         /// <param name="id">Идентификатор подразделения</param>
         public IActionResult OnGet(int id)
@@ -58,7 +58,7 @@ namespace TestTask.Pages.Divisions
         }
 
         /// <summary>
-        /// Удаленят подразделение в соответсвтии с идентификтором
+        /// Удаление подразделения в соответсвтии с идентификтором
         /// </summary>
         /// <param name="id">Идентификатор подразделения</param>
         public IActionResult OnPost(int id)

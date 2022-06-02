@@ -61,7 +61,7 @@
 </div>
 
 <div>
-    <a asp-route-id="@HttpContext.Session.GetInt32("SelectedDivisionId")" asp-page-handler="Filter" asp-page="../Index/">Назад</a>
+    <a asp-route-id="@Model._pageHelper.GetFilterIdOnSession(HttpContext)" asp-page-handler="Filter" asp-page="../Index/">Назад</a>
 </div>
 
 @section Scripts {

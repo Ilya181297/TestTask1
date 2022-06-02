@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore.ChangeTracking;
+using System.Collections.Generic;
 using TestTask.Data;
 
 namespace TestTask.Services
@@ -30,7 +31,7 @@ namespace TestTask.Services
         /// <param name="addToDictionary">Метод добавления в кэш</param>
         /// <param name="addToDbSet">Функция добавления модели в контекст</param>
         public void Save(T item, Action<T> updateModelInCache
-            , Action<int, T> addToDictionary, Func<T, EntityEntry> addToDbSet)
+            , Func<int, T, bool> addToDictionary, Func<T, EntityEntry> addToDbSet)
         {
             if (item.Id == 0)
                 Add(item, addToDictionary, addToDbSet);
@@ -38,20 +39,7 @@ namespace TestTask.Services
                 Edit(item, updateModelInCache);
         }
 
-        /// <summary>
-        /// Удаление
-        /// </summary>
-        /// <param name="item">Удаляемая модель</param>
-        /// <param name="removeFromDbSet">Функция удаления сущности из контекста</param>
-        /// <param name="removeFromDict">Функция удаления модели из кэша</param>
-        public void Delete(T item, Func<T, EntityEntry> removeFromDbSet, Func<int, bool> removeFromDict)
-        {
-            removeFromDbSet?.Invoke(item);
-            _context.SaveChanges();
-            removeFromDict?.Invoke(item.Id);
-        }
-
-        private void Add(T item, Action<int, T> addToDictionary, Func<T, EntityEntry> addToDbSet)
+        private void Add(T item, Func<int, T, bool> addToDictionary, Func<T, EntityEntry> addToDbSet)
         {
             addToDbSet?.Invoke(item);
             _context.SaveChanges();

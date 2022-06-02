@@ -30,12 +30,12 @@ namespace TestTask.Pages
         }
 
         /// <summary>
-        /// Список подразделений
+        /// Полученный список подразделений
         /// </summary>
         public List<Division> Divisions { get; set; }
 
         /// <summary>
-        /// Список работников
+        /// Полученный список работников
         /// </summary>
         public List<Worker> Workers { get; set; }
 
@@ -45,7 +45,7 @@ namespace TestTask.Pages
         public Division SelectedDivision { get; set; }
 
         /// <summary>
-        /// Заполняет работников в соответсвтии с выбранным идентификтором подразделения
+        /// Возвращает страницу с работниками в соответсвтии с ид. выбранного подразделения
         /// </summary>
         /// <param name="id">Идентификатор подразделения</param>
         public void OnGet(int id)

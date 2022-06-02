@@ -43,7 +43,7 @@ namespace TestTask.Common
         private readonly SelectListItem _rootItem = new SelectListItem { Value = "0", Text = "Корневой" };
 
         /// <summary>
-        /// Преобразует список подлразлелений в список для отображения на странице
+        /// Преобразует список подразделений в список для отображения на странице
         /// </summary>
         /// <param name="divisions">Список подразделений</param>
         /// <param name="isWithRootItem">True - будет добавлен корневой элемент</param>

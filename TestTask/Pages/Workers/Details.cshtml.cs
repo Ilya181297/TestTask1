@@ -8,25 +8,24 @@ using TestTask.Services;
 namespace TestTask.Pages.Workers
 {
     /// <summary>
-    /// Страница просмотра работника
+    /// Страница детального просмотра работника
     /// </summary>
     public class DetailsModel : PageModel
     {
-        private readonly ITestTaskService _companyService;
+        private readonly ITestTaskService _testTaskService;
         private readonly ILogger<DetailsModel> _logger;
-        private readonly PageHelper _pageHelper;
+        public readonly PageHelper _pageHelper;
 
         /// <summary>
         /// Конструктор страницы
         /// </summary>
         /// <param name="testTaskService">Сервис для работы с подразделениями и сотрудниками</param>
         /// <param name="logger">Логер</param>
-        public DetailsModel(ITestTaskService companyService, ILogger<DetailsModel> logger)
+        public DetailsModel(ITestTaskService testTaskService, ILogger<DetailsModel> logger)
         {
-            _companyService = companyService;
+            _testTaskService = testTaskService;
             _logger = logger;
             _pageHelper = new PageHelper();
-
         }
 
         /// <summary>
@@ -35,14 +34,14 @@ namespace TestTask.Pages.Workers
         public Worker Worker { get; set; }
 
         /// <summary>
-        /// Заполняет работника в соответсвтии с идентификтором
+        /// Возвращает страницу с заполненным работником в соответсвтии с идентификатором
         /// </summary>
         /// <param name="id">Идентификатор работника</param>
         public IActionResult OnGet(int id)
         {
             try
             {
-                Worker = _companyService.GetWorker(id);
+                Worker = _testTaskService.GetWorker(id);
 
                 if (Worker is null)
                     return NotFound($"Worker with Id={id} is not found");
