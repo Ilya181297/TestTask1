@@ -2,10 +2,10 @@
 
 namespace TestTask.Services
 {
-    public partial class CompanyService
+    public partial class TestTaskService
     {
-        private Dictionary<int, Worker> _workersDict = new Dictionary<int, Worker>();
-        private Dictionary<int, Division> _divisionDict = new Dictionary<int, Division>();
+        private Dictionary<int, Worker> _workersDict = new();
+        private Dictionary<int, Division> _divisionDict = new();
 
         public void InitializeCache()
         {

@@ -1,4 +1,5 @@
 ﻿@page
+@using TestTask.Common
 @using TestTask.Models
 @using TestTask.Services
 @model TestTask.Pages.Divisions.DetailsModel
@@ -38,6 +39,6 @@
     </dl>
 </div>
 <div>
-    <a asp-page="./Divisions/Edit" asp-route-id="@Model.Division.Id">Редактировать</a> |
-    <a asp-route-id="@PageHelper.SelectedDivisionIdOnFilter" asp-page-handler="Filter" asp-page="../Index/">Назад</a>
+    <a asp-route-id="@Model.Division.Id" asp-page="./Edit">Редактировать</a> |
+    <a asp-route-id="@HttpContext.Session.GetInt32("SelectedDivisionId")" asp-page-handler="Filter" asp-page="../Index/">Назад</a>
 </div>

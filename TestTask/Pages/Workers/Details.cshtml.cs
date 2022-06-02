@@ -1,25 +1,43 @@
 ﻿#nullable disable
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using TestTask.Common;
 using TestTask.Models;
 using TestTask.Services;
 
 namespace TestTask.Pages.Workers
 {
+    /// <summary>
+    /// Страница просмотра работника
+    /// </summary>
     public class DetailsModel : PageModel
     {
-        private readonly ICompanyService _companyService;
-
+        private readonly ITestTaskService _companyService;
         private readonly ILogger<DetailsModel> _logger;
+        private readonly PageHelper _pageHelper;
 
-        public DetailsModel(ICompanyService companyService, ILogger<DetailsModel> logger)
+        /// <summary>
+        /// Конструктор страницы
+        /// </summary>
+        /// <param name="testTaskService">Сервис для работы с подразделениями и сотрудниками</param>
+        /// <param name="logger">Логер</param>
+        public DetailsModel(ITestTaskService companyService, ILogger<DetailsModel> logger)
         {
-           _companyService = companyService;
+            _companyService = companyService;
             _logger = logger;
+            _pageHelper = new PageHelper();
+
         }
 
+        /// <summary>
+        /// Полученная модель работника
+        /// </summary>
         public Worker Worker { get; set; }
 
+        /// <summary>
+        /// Заполняет работника в соответсвтии с идентификтором
+        /// </summary>
+        /// <param name="id">Идентификатор работника</param>
         public IActionResult OnGet(int id)
         {
             try
@@ -33,7 +51,7 @@ namespace TestTask.Pages.Workers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, PageHelper.GetErrorMessage("Workers/Details/OnGet"));
+                _logger.LogError(ex, _pageHelper.GetErrorMessage("Workers/Details/OnGet"));
 
                 return Page();
             }

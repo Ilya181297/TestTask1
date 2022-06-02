@@ -1,26 +1,70 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using TestTask.Data.Models;
+using TestTask.Common;
+using TestTask.Data;
 
 namespace TestTask.Models
 {
-    public class Worker
+    /// <summary>
+    /// Модель работника
+    /// </summary>
+    public class Worker : IDbEntity
     {
         public int Id { get; set; }
+
+        /// <summary>
+        /// Фамилия
+        /// </summary>
         public string Surname { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Имя 
+        /// </summary>
         public string Name { get; set; } = string.Empty;
+        /// <summary>
+        /// Отчетсво
+        /// </summary>
         public string? MiddleName { get; set; }
 
+        /// <summary>
+        /// Дата рождения 
+        /// </summary>
         [DataType(DataType.Date)]
         public DateTime BirthDate { get; set; }
+
+        /// <summary>
+        /// Пол
+        /// </summary>
         public int GenderId { get; set; }
+
+        /// <summary>
+        /// Должность
+        /// </summary>
         public string Post { get; set; } = string.Empty;
+
+        /// <summary>
+        /// Наличие водительских прав. 0 - нет, 1 - есть
+        /// </summary>
         public int IsHasDriveLicense { get; set; }
+
+        /// <summary>
+        /// Идентификатор подразделения
+        /// </summary>
         public int DivisionId { get; set; }
+
+        /// <summary>
+        /// Модель подразделения. Навигационное свойство
+        /// </summary>
         public virtual Division? Division { get; set; }
 
+        /// <summary>
+        /// Пол в строковом представлении. <see cref="Models.Gender"/>
+        /// </summary>
         public string Gender => ((Gender)this.GenderId).GetDescription();
 
+        /// <summary>
+        /// Наличие водительских прав в булевом представлении. False - нет, True - есть
+        /// </summary>
         [NotMapped]
         public bool IsHasDriveLicenseBool
         {

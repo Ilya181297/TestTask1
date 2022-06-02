@@ -1,4 +1,5 @@
 ﻿@page
+@using TestTask.Common
 @using TestTask.Services
 @model TestTask.Pages.Divisions.DeleteModel
 
@@ -33,6 +34,6 @@
     <form method="post">
         <input type="hidden" asp-for="Division.Id" />
         <input type="submit" value="Удалить" class="btn btn-danger" /> |
-        <a asp-route-id="@PageHelper.SelectedDivisionIdOnFilter" asp-page-handler="Filter" asp-page="../Index/">Назад</a>
+        <a asp-route-id="@HttpContext.Session.GetInt32("SelectedDivisionId")" asp-page-handler="Filter" asp-page="../Index/">Назад</a>
     </form>
 </div>

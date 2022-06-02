@@ -1,7 +1,10 @@
 ﻿using System.ComponentModel;
 
-namespace TestTask.Models
+namespace TestTask.Common
 {
+    /// <summary>
+    /// Перечисление пола роботника
+    /// </summary>
     public enum Gender
     {
         [Description("Мужской")]
