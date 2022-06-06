@@ -2,7 +2,7 @@
 @using TestTask.Common
 @using TestTask.Models
 @model TestTask.Pages.Divisions.EditModel
-
+@inject IPageHelper pageHelper;
 @{
     ViewData["Title"] = "Edit";
 }
@@ -42,7 +42,7 @@
 </div>
 
 <div>
-    <a asp-route-id="@Model._pageHelper.GetFilterIdOnSession(HttpContext))" asp-page-handler="Filter" asp-page="../Index/">Назад</a>
+    <a asp-route-id=@pageHelper.GetFilterIdOnSession(HttpContext) asp-page-handler="Filter" asp-page="../Index/">Назад</a>
 </div>
 
 @section Scripts {

@@ -15,18 +15,18 @@ namespace TestTask.Pages.Workers
     {
         private readonly ITestTaskService _testTaskService;
         private readonly ILogger<EditModel> _logger;
-        public readonly PageHelper _pageHelper;
+        private readonly IPageHelper _pageHelper;
 
         /// <summary>
         /// Конструктор страницы
         /// </summary>
         /// <param name="testTaskService">Сервис для работы с подразделениями и сотрудниками</param>
         /// <param name="logger">Логер</param>
-        public EditModel(ITestTaskService testTaskService, ILogger<EditModel> logger)
+        public EditModel(ITestTaskService testTaskService, ILogger<EditModel> logger, IPageHelper pageHelper)
         {
             _testTaskService = testTaskService;
             _logger = logger;
-            _pageHelper = new PageHelper();
+            _pageHelper = pageHelper;
         }
 
         /// <summary>

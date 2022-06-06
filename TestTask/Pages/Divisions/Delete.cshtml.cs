@@ -14,18 +14,18 @@ namespace TestTask.Pages.Divisions
     {
         private readonly ITestTaskService _testTaskService;
         private readonly ILogger<DeleteModel> _logger;
-        public readonly PageHelper _pageHelper;
+        private readonly IPageHelper _pageHelper;
 
         /// <summary>
         /// Конструктор страницы
         /// </summary>
         /// <param name="testTaskService">Сервис для работы с подразделениями и сотрудниками</param>
         /// <param name="logger">Логер</param>
-        public DeleteModel(ITestTaskService testTaskService, ILogger<DeleteModel> logger)
+        public DeleteModel(ITestTaskService testTaskService, ILogger<DeleteModel> logger, IPageHelper pageHelper)
         {
             _testTaskService = testTaskService;
             _logger = logger;
-            _pageHelper = new PageHelper();
+            _pageHelper = pageHelper;
         }
 
         /// <summary>

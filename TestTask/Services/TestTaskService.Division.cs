@@ -64,6 +64,7 @@ namespace TestTask.Services
                 throw new ArgumentException($"Division with id={division.Id} not exist");
 
             _context.Division.Remove(division);
+            _context.SaveChanges();
             _divisionDict.TryRemove(division.Id, out var _);
         }
     }

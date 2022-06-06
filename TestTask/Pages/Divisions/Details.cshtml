@@ -3,7 +3,7 @@
 @using TestTask.Models
 @using TestTask.Services
 @model TestTask.Pages.Divisions.DetailsModel
-
+@inject IPageHelper pageHelper;
 @{
     ViewData["Title"] = "Details";
 }
@@ -40,5 +40,5 @@
 </div>
 <div>
     <a asp-route-id="@Model.Division.Id" asp-page="./Edit">Редактировать</a> |
-    <a asp-route-id="@Model._pageHelper.GetFilterIdOnSession(HttpContext)" asp-page-handler="Filter" asp-page="../Index/">Назад</a>
+    <a asp-route-id=@pageHelper.GetFilterIdOnSession(HttpContext) asp-page-handler="Filter" asp-page="../Index/">Назад</a>
 </div>
