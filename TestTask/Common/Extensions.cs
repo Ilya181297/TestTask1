@@ -4,7 +4,7 @@ using System.Reflection;
 namespace TestTask.Common
 {
     /// <summary>
-    ///  Класс расширения объектов
+    /// Класс расширения объектов
     /// </summary>
     public static class Extensions
     {

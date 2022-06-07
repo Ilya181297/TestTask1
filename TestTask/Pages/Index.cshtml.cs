@@ -15,27 +15,27 @@ namespace TestTask.Pages
 
         private readonly ILogger<IndexModel> _logger;
 
-        private readonly PageHelper _pageHelper;
+        private readonly IPageHelper _pageHelper;
 
         /// <summary>
         /// Конструктор страницы
         /// </summary>
         /// <param name="testTaskService">Сервис для работы с подразделениями и сотрудниками</param>
         /// <param name="logger">Логер</param>
-        public IndexModel(ITestTaskService companyService, ILogger<IndexModel> logger)
+        public IndexModel(ITestTaskService companyService, ILogger<IndexModel> logger, IPageHelper pageHelper)
         {
             _companyService = companyService;
             _logger = logger;
-            _pageHelper = new PageHelper();
+            _pageHelper = pageHelper;
         }
 
         /// <summary>
-        /// Список подразделений
+        /// Полученный список подразделений
         /// </summary>
         public List<Division> Divisions { get; set; }
 
         /// <summary>
-        /// Список работников
+        /// Полученный список работников
         /// </summary>
         public List<Worker> Workers { get; set; }
 
@@ -45,7 +45,7 @@ namespace TestTask.Pages
         public Division SelectedDivision { get; set; }
 
         /// <summary>
-        /// Заполняет работников в соответсвтии с выбранным идентификтором подразделения
+        /// Возвращает страницу с работниками в соответсвтии с ид. выбранного подразделения
         /// </summary>
         /// <param name="id">Идентификатор подразделения</param>
         public void OnGet(int id)

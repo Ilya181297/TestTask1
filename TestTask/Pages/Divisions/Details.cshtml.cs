@@ -14,18 +14,18 @@ namespace TestTask.Pages.Divisions
     {
         private readonly ITestTaskService _testTaskService;
         private readonly ILogger<DetailsModel> _logger;
-        private readonly PageHelper _pageHelper;
+        private readonly IPageHelper _pageHelper;
 
         /// <summary>
         /// Конструктор страницы
         /// </summary>
         /// <param name="testTaskService">Сервис для работы с подразделениями и сотрудниками</param>
         /// <param name="logger">Логер</param>
-        public DetailsModel(ITestTaskService testTaskService, ILogger<DetailsModel> logger)
+        public DetailsModel(ITestTaskService testTaskService, ILogger<DetailsModel> logger, IPageHelper pageHelper)
         {
             _testTaskService = testTaskService;
             _logger = logger;
-            _pageHelper = new PageHelper();
+            _pageHelper = pageHelper;
         }
 
         /// <summary>
@@ -34,7 +34,7 @@ namespace TestTask.Pages.Divisions
         public Division Division { get; set; }
 
         /// <summary>
-        /// Заполняет подразделение в соответсвтии с идентификтором
+        /// Возвращает страницу с заполненным подразделением в соответсвтии с идентификатором
         /// </summary>
         /// <param name="id">Идентификатор подразделения</param>
         public IActionResult OnGet(int id)

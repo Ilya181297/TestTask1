@@ -13,40 +13,40 @@ namespace TestTask.Pages.Workers
     /// </summary>
     public class EditModel : PageModel
     {
-        private readonly ITestTaskService _companyService;
+        private readonly ITestTaskService _testTaskService;
         private readonly ILogger<EditModel> _logger;
-        private readonly PageHelper _pageHelper;
+        private readonly IPageHelper _pageHelper;
 
         /// <summary>
         /// Конструктор страницы
         /// </summary>
         /// <param name="testTaskService">Сервис для работы с подразделениями и сотрудниками</param>
         /// <param name="logger">Логер</param>
-        public EditModel(ITestTaskService companyService, ILogger<EditModel> logger)
+        public EditModel(ITestTaskService testTaskService, ILogger<EditModel> logger, IPageHelper pageHelper)
         {
-            _companyService = companyService;
+            _testTaskService = testTaskService;
             _logger = logger;
-            _pageHelper = new PageHelper();
+            _pageHelper = pageHelper;
         }
 
         /// <summary>
-        /// Список подразделений
+        /// Полученный список всех подразделений
         /// </summary>
         public List<SelectListItem> Divisions { get; set; }
 
         /// <summary>
-        /// Список пола работника
+        /// Полученный список полов работника
         /// </summary>
         public List<SelectListItem> Genders { get; set; }
 
         /// <summary>
-        /// Выбранное подразделение
+        /// Идентификатор выбранного подразделение
         /// </summary>
         [BindProperty]
         public int SelectedDivisionId { get; set; }
 
         /// <summary>
-        /// Выбранный пол
+        /// Выбранный пол работника
         /// </summary>
         [BindProperty]
         public int SelectedGender { get; set; }
@@ -58,7 +58,7 @@ namespace TestTask.Pages.Workers
         public Worker Worker { get; set; }
 
         /// <summary>
-        /// Заполняет работника в соответсвтии с идентификтором
+        /// Возвращает страницу с заполненным работником в соответсвтии с идентификатором
         /// </summary>
         /// <param name="id">Идентификатор работника</param>
         public IActionResult OnGet(int id)
@@ -66,7 +66,7 @@ namespace TestTask.Pages.Workers
             try
             {
                 Genders = _pageHelper.GetGenderListItems();
-                Divisions = _pageHelper.ConvertToSelectList(_companyService.GetDivisions());
+                Divisions = _pageHelper.ConvertToSelectList(_testTaskService.GetDivisions());
 
                 if (id == 0)
                 {
@@ -77,7 +77,7 @@ namespace TestTask.Pages.Workers
                     return Page();
                 }
 
-                Worker = _companyService.GetWorker(id);
+                Worker = _testTaskService.GetWorker(id);
 
                 if (Worker is null)
                     return NotFound($"Worker with Id={id} is not found");
@@ -96,7 +96,7 @@ namespace TestTask.Pages.Workers
         }
 
         /// <summary>
-        /// Создаёт/редактирует работника
+        /// Создание/редактирование работника
         /// </summary>
         public IActionResult OnPost()
         {
@@ -108,7 +108,7 @@ namespace TestTask.Pages.Workers
                 Worker.DivisionId = SelectedDivisionId;
                 Worker.GenderId = SelectedGender;
 
-                _companyService.SaveWorker(Worker);
+                _testTaskService.SaveWorker(Worker);
 
                 return RedirectToPage("../Index", new { id = _pageHelper.GetFilterIdOnSession(HttpContext) });
             }

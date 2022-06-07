@@ -12,20 +12,20 @@ namespace TestTask.Pages.Workers
     /// </summary>
     public class DeleteModel : PageModel
     {
-        private readonly ITestTaskService _companyService;
+        private readonly ITestTaskService _testTaskService;
         private readonly ILogger<DeleteModel> _logger;
-        private readonly PageHelper _pageHelper;
+        private readonly IPageHelper _pageHelper;
 
         /// <summary>
         /// Конструктор страницы
         /// </summary>
         /// <param name="testTaskService">Сервис для работы с подразделениями и сотрудниками</param>
         /// <param name="logger">Логер</param>
-        public DeleteModel(ITestTaskService companyService, ILogger<DeleteModel> logger)
+        public DeleteModel(ITestTaskService testTaskService, ILogger<DeleteModel> logger, IPageHelper pageHelper)
         {
-            _companyService = companyService;
+            _testTaskService = testTaskService;
             _logger = logger;
-            _pageHelper = new PageHelper();
+            _pageHelper = pageHelper;
         }
 
         /// <summary>
@@ -35,14 +35,14 @@ namespace TestTask.Pages.Workers
         public Worker Worker { get; set; }
 
         /// <summary>
-        /// Заполняет работника в соответсвтии с идентификтором
+        /// Возвращает страницу с заполненным работником в соответсвтии с идентификатором
         /// </summary>
         /// <param name="id">Идентификатор работника</param>
         public IActionResult OnGet(int id)
         {
             try
             {
-                Worker = _companyService.GetWorker(id);
+                Worker = _testTaskService.GetWorker(id);
 
                 if (Worker is null)
                     return NotFound($"Worker with Id={id} is not found");
@@ -58,14 +58,14 @@ namespace TestTask.Pages.Workers
         }
 
         /// <summary>
-        /// Удаленят работника в соответсвтии с идентификтором
+        /// Удаление работника в соответсвтии с идентификтором
         /// </summary>
         /// <param name="id">Идентификатор работника</param>
         public IActionResult OnPost(int id)
         {
             try
             {
-                _companyService.DeleteWorker(id);
+                _testTaskService.DeleteWorker(id);
 
                 return RedirectToPage("../Index", new { id = _pageHelper.GetFilterIdOnSession(HttpContext) });
             }

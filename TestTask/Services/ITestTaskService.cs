@@ -2,6 +2,9 @@
 
 namespace TestTask.Services
 {
+    /// <summary>
+    /// Интерфейс сервиса для работы с подразделениями и сотрудниками
+    /// </summary>
     public interface ITestTaskService
     {
         /// <summary>
@@ -31,13 +34,14 @@ namespace TestTask.Services
         /// Добавление/редактирование работника
         /// </summary>
         /// <param name="worker">Работник</param>
+        /// <exception cref="ArgumentNullException">Worker is null</exception>
         void SaveWorker(Worker worker);
 
         /// <summary>
         /// Удаление работника
         /// </summary>
         /// <param name="id">Идентификатор работника</param>
-        /// <exception cref="ArgumentNullException">Worker is null</exception>
+        /// <exception cref="ArgumentException">Worker with id doesn't exist</exception>
         void DeleteWorker(int id);
 
         /// <summary>
@@ -46,7 +50,7 @@ namespace TestTask.Services
         List<Division> GetDivisions();
 
         /// <summary>
-        /// Возваращет подразделение
+        /// Возваращает подразделение
         /// </summary>
         /// <param name="id">Идентификатор подразделения</param>
         Division? GetDivision(int id);
@@ -55,13 +59,14 @@ namespace TestTask.Services
         /// Добавление/редактирование подразделения
         /// </summary>
         /// <param name="division">Подразделение</param>
+        /// <exception cref="ArgumentNullException">Division is null</exception>
         void SaveDivision(Division division);
 
         /// <summary>
         /// Удаление подразделения
         /// </summary>
         /// <param name="id">Идентификатор подразделения</param>
-        /// <exception cref="ArgumentNullException">Division is null</exception>
+        /// <exception cref="ArgumentException">Division with id doesn't exist</exception>
         void DeleteDivision(int id);
     }
 }

@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using TestTask.Common;
 using TestTask.Data;
 using TestTask.Services;
 
@@ -15,6 +16,8 @@ builder.Services.AddDbContext<TestTaskContext>(options =>
     , ServiceLifetime.Singleton);
 
 builder.Services.AddSingleton<ITestTaskService, TestTaskService>();
+
+builder.Services.AddScoped<IPageHelper, PageHelper>();
 
 var app = builder.Build();
 

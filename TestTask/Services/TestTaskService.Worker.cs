@@ -5,9 +5,6 @@ namespace TestTask.Services
 {
     public partial class TestTaskService : ITestTaskService
     {
-        private readonly TestTaskContext _context;
-        private readonly object _syncRoot = new();
-
         public TestTaskService(TestTaskContext context)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
@@ -33,27 +30,31 @@ namespace TestTask.Services
 
         public void SaveWorker(Worker worker)
         {
+            if (worker is null)
+                throw new ArgumentNullException(nameof(worker));
+
             lock (_syncRoot)
             {
-                if (worker is null)
-                    throw new ArgumentNullException(nameof(worker));
-
                 var crud = new GenericOperations<Worker>(_context);
-
                 crud.Save(worker, UpdateModelInCache
-                    , _workersDict.Add, _context.Worker.Add);
+                    , _workersDict.TryAdd, _context.Worker.Add);
             }
         }
 
         public void DeleteWorker(int id)
         {
+            if (!_workersDict.TryGetValue(id, out var worker))
+                throw new ArgumentException($"Worker with id={id} not exist");
+
             lock (_syncRoot)
             {
-                if (!_workersDict.TryGetValue(id, out var worker))
-                    throw new ArgumentException($"Worker with id={id} not exist");
+                // не выкидываем исключение, т.к. в данном случае другой поток уже успел удалить - не критично
+                if (!_workersDict.TryGetValue(id, out worker))
+                    return;
 
-                var operations = new GenericOperations<Worker>(_context);
-                operations.Delete(worker, _context.Worker.Remove, _workersDict.Remove);
+                _context.Worker.Remove(worker);
+                _context.SaveChanges();
+                _workersDict.TryRemove(id, out var _);
             }
         }
     }

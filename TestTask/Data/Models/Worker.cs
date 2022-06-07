@@ -6,7 +6,7 @@ using TestTask.Data;
 namespace TestTask.Models
 {
     /// <summary>
-    /// Модель работника
+    /// Сущность работника
     /// </summary>
     public class Worker : IDbEntity
     {

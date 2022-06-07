@@ -4,7 +4,7 @@ using TestTask.Data;
 namespace TestTask.Models
 {
     /// <summary>
-    /// Модель подразделения
+    /// Сущность подразделения
     /// </summary>
     public class Division : IDbEntity
     {

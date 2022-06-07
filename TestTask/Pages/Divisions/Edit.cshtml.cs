@@ -13,24 +13,24 @@ namespace TestTask.Pages.Divisions
     /// </summary>
     public class EditModel : PageModel
     {
-        private readonly ITestTaskService _companyService;
+        private readonly ITestTaskService _testTaskService;
         private readonly ILogger<EditModel> _logger;
-        private readonly PageHelper _pageHelper;
+        private readonly IPageHelper _pageHelper;
 
         /// <summary>
         /// Конструктор страницы
         /// </summary>
         /// <param name="testTaskService">Сервис для работы с подразделениями и сотрудниками</param>
         /// <param name="logger">Логер</param>
-        public EditModel(ITestTaskService companyService, ILogger<EditModel> logger)
+        public EditModel(ITestTaskService testTaskService, ILogger<EditModel> logger, IPageHelper pageHelper)
         {
-            _companyService = companyService;
+            _testTaskService = testTaskService;
             _logger = logger;
-            _pageHelper = new PageHelper();
+            _pageHelper = pageHelper;
         }
 
         /// <summary>
-        /// Список подразделений
+        /// Полученный список всех подразделений
         /// </summary>
         public List<SelectListItem> Divisions { get; set; }
 
@@ -41,20 +41,20 @@ namespace TestTask.Pages.Divisions
         public Division Division { get; set; }
 
         /// <summary>
-        /// Выбранное родительское подразделение
+        /// Идентифиактор выбранного родительского подразделения
         /// </summary>
         [BindProperty]
         public int SelectedParentId { get; set; }
 
         /// <summary>
-        /// Заполняет подразделение в соответсвтии с идентификтором
+        /// Возвращает страницу с заполненным подразделением в соответсвтии с идентификатором
         /// </summary>
         /// <param name="id">Идентификатор подразедления</param>
         public IActionResult OnGet(int id)
         {
             try
             {
-                var divisions = _companyService.GetDivisions().Where(x => x.Id != id);
+                var divisions = _testTaskService.GetDivisions().Where(x => x.Id != id);
                 Divisions = _pageHelper.ConvertToSelectList(divisions, true);
 
                 if (id == 0)
@@ -66,7 +66,7 @@ namespace TestTask.Pages.Divisions
                     return Page();
                 }
 
-                Division = _companyService.GetDivision(id);
+                Division = _testTaskService.GetDivision(id);
 
                 if (Division is null)
                     return NotFound();
@@ -84,7 +84,7 @@ namespace TestTask.Pages.Divisions
         }
 
         /// <summary>
-        /// Создает/редактирует подразделение
+        /// Создание/редактирование подразделения
         /// </summary>
         public IActionResult OnPost()
         {
@@ -94,7 +94,7 @@ namespace TestTask.Pages.Divisions
                     return Page();
 
                 Division.ParentId = SelectedParentId == 0 ? null : SelectedParentId;
-                _companyService.SaveDivision(Division);
+                _testTaskService.SaveDivision(Division);
 
                 return RedirectToPage("../Index", new { id = _pageHelper.GetFilterIdOnSession(HttpContext) });
             }

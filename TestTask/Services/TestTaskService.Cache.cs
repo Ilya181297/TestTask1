@@ -1,16 +1,20 @@
-﻿using TestTask.Models;
+﻿using System.Collections.Concurrent;
+using TestTask.Models;
 
 namespace TestTask.Services
 {
     public partial class TestTaskService
     {
-        private Dictionary<int, Worker> _workersDict = new();
-        private Dictionary<int, Division> _divisionDict = new();
+        private ConcurrentDictionary<int, Worker> _workersDict = new();
+        private ConcurrentDictionary<int, Division> _divisionDict = new();
 
         public void InitializeCache()
         {
-            _workersDict = _context.Worker.ToDictionary(x => x.Id);
-            _divisionDict = _context.Division.ToDictionary(x => x.Id);
+            var workers = _context.Worker.Select(x => new KeyValuePair<int, Worker>(x.Id, x));
+            _workersDict = new ConcurrentDictionary<int, Worker>(workers);
+
+            var divisions = _context.Division.Select(x => new KeyValuePair<int, Division>(x.Id, x));
+            _divisionDict = new ConcurrentDictionary<int, Division>(divisions);
         }
 
         private void UpdateModelInCache(Worker worker)
@@ -40,7 +44,7 @@ namespace TestTask.Services
         private void DeleteWorkersFromCache(IEnumerable<int> workerIds)
         {
             foreach (var workerId in workerIds)
-                _workersDict.Remove(workerId);
+                _workersDict.TryRemove(workerId, out Worker? worker);
         }
     }
 }

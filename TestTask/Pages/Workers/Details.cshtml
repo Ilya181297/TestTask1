@@ -1,7 +1,7 @@
 ﻿@page
 @using TestTask.Common
 @model TestTask.Pages.Workers.DetailsModel
-
+@inject IPageHelper pageHelper;
 @{
     ViewData["Title"] = "Details";
 }
@@ -63,5 +63,5 @@
 </div>
 <div>
     <a asp-route-id="@Model.Worker.Id" asp-page="./Edit" >Редактировать</a> |
-    <a asp-route-id="@HttpContext.Session.GetInt32("SelectedDivisionId")" asp-page-handler="Filter" asp-page="../Index/">Назад</a>
+    <a asp-route-id=@pageHelper.GetFilterIdOnSession(HttpContext) asp-page-handler="Filter" asp-page="../Index/">Назад</a>
 </div>
